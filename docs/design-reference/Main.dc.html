@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LuxCart homepage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&amp;family=Figtree:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FAF7F2}
+a{color:#1F5C5A}a:hover{color:#174644}
+@media (max-width:860px){.lc-hero-grid{grid-template-columns:minmax(0,1fr)!important}.lc-hero-stage{display:none!important}.lc-slide-text{max-width:100%!important;padding:0 24px 40px!important}.lc-slide-text h1{font-size:32px!important}.lc-slide-dots{left:24px!important}}
+@media (max-width:900px){.lc-deals{grid-template-columns:minmax(0,1fr)!important}}
+@media (max-width:900px){.lc-bundle{grid-template-columns:minmax(0,1fr)!important;gap:28px!important}.lc-bundle>div:first-child{height:300px!important}}
+@media (max-width:900px){.lc-promise{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}}
+@media (max-width:900px){.lc-mail{grid-template-columns:minmax(0,1fr)!important;padding:28px!important}}
+@media (max-width:1000px){.lc-reviews{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}.lc-reviews>div:first-child{grid-column:1 / -1}}
+@media (max-width:640px){.lc-reviews{grid-template-columns:minmax(0,1fr)!important}}
+@media (max-width:900px){.lc-foot{grid-template-columns:repeat(2,minmax(0,1fr))!important}.lc-foot>div:first-child{grid-column:1 / -1}}
+@media (max-width:640px){.lc-deal-list{grid-template-columns:minmax(0,1fr)!important}}
+.lc-mi{flex:none;height:52px;display:flex;align-items:center}.lc-mega{display:none;position:absolute;left:0;right:0;top:100%;background:#FFFFFF;border-top:1px solid #E4D9C8;border-bottom:1px solid #E4D9C8;box-shadow:0 18px 36px rgba(31,42,46,0.12);white-space:normal;text-align:left}.lc-mi:hover>.lc-mega,.lc-mi:focus-within>.lc-mega,.lc-open>.lc-mega{display:block}.lc-mi:hover>a,.lc-mi:focus-within>a,.lc-open>a{box-shadow:inset 0 -2px 0 #1F5C5A}.lc-ml:hover{color:#1F5C5A!important;text-decoration:underline!important}.lc-mpromo:hover{background:#F2D6C6!important}
+@media (max-width:860px){.lc-hdr{grid-template-columns:auto auto!important}.lc-hdr>form{grid-column:1 / -1;grid-row:2}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</helmet>
+<div style="font-family: Figtree, 'Segoe UI', system-ui, sans-serif; color: #1F2A2E; background: #FAF7F2; font-size: 16px; line-height: 1.6;">
+
+<sc-if value="{{showBar}}" hint-placeholder-val="{{ true }}">
+<div style="background: #B4532C; color: #FFFFFF; text-align: center; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; padding: 9px 16px;"><span style="font-weight: 700;">Holiday sale:</span> 20% off gifts until Nov 30 <span aria-hidden="true" style="margin: 0 10px;">·</span> Free US shipping over $50 <a href="#gifts" style="color: #FFFFFF; margin-left: 10px; font-weight: 700;">Shop now</a></div>
+</sc-if>
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #E4D9C8;">
+<div class="lc-hdr" style="max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 640px) minmax(0, 1fr); align-items: center; gap: 16px 32px;">
+<a href="#top" style="justify-self: start; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #1F2A2E; flex: none;" aria-label="LuxCart home">
+<svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#1F5C5A"></rect><path d="M34.5 15.5A12 12 0 0 0 14 22v13.5h20" fill="none" stroke="#FAF7F2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="34.5" cy="25.5" r="3.2" fill="#E8875E"></circle></svg>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 30px; line-height: 1;">Lux<span style="color: #1F5C5A;">Cart</span></span>
+</a>
+<form role="search" style="width: 100%; min-width: 0; display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; box-sizing: border-box; border: 1px solid transparent; border-radius: 10px; background: #F3EEE6;">
+<label for="site-search" class="sr-only">Search LuxCart</label>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A666A" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex: none;"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input id="site-search" type="search" placeholder="Search for gifts, decor and more" style="flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; padding: 0; font: inherit; font-size: 15px; color: #1F2A2E; outline-offset: 6px; -webkit-appearance: none; appearance: none;">
+</form>
+<div style="justify-self: end; display: flex; align-items: center; gap: 6px;">
+<a href="#account" aria-label="Account: sign in or create an account" style="position: relative; width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: #1F2A2E;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg><span aria-hidden="true" style="position: absolute; top: 9px; right: 9px; width: 9px; height: 9px; border-radius: 999px; background: #E8875E; border: 2px solid #FFFFFF;"></span></a>
+<a href="#wishlist" aria-label="Wishlist" style="width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: #1F2A2E;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></a>
+<a href="#cart" aria-label="Cart, 2 items" style="position: relative; width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: #1F2A2E;"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg><span aria-hidden="true" style="position: absolute; top: 5px; right: 3px; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; background: #1F5C5A; color: #FAF7F2; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;">2</span></a>
+</div>
+</div>
+<nav aria-label="Categories" style="position: relative; z-index: 30; border-top: 1px solid #EFE6D8; background: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 4px; height: 52px;">
+<div class="lc-mi"><button type="button" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border: 0; border-radius: 999px; background: #1F5C5A; font: inherit; font-size: 14px; font-weight: 600; color: #FAF7F2; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>All categories<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><div class="lc-mega" role="region" aria-label="All categories menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 28px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px 28px;"><div><a href="#gifts" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Gifts</a><a href="#for-him" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For him</a><a href="#for-her" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For her</a><a href="#for-the-host" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For the host</a><a href="#for-pet-lovers" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For pet lovers</a><a href="#for-the-home-office" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For the home office</a><a href="#for-new-homeowners" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">For new homeowners</a></div><div><a href="#decor" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Home Decor</a><a href="#vases-and-planters" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Vases and planters</a><a href="#candles-and-scents" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Candles and scents</a><a href="#wall-art" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Wall art</a><a href="#mirrors" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Mirrors</a><a href="#throws-and-pillows" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Throws and pillows</a><a href="#lighting" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Lighting</a></div><div><a href="#furniture" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Furniture</a><a href="#living-room" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Living room</a><a href="#bedroom" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Bedroom</a><a href="#home-office" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Home office</a><a href="#bar-carts" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Bar carts</a><a href="#storage-and-shelves" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Storage and shelves</a><a href="#outdoor" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Outdoor</a></div><div><a href="#kitchen" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Kitchen</a><a href="#kitchen-and-bar" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Kitchen and Bar</a><a href="#glassware" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Glassware</a><a href="#serveware" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Serveware</a><a href="#cookware" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Cookware</a><a href="#coffee-and-tea" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Coffee and tea</a><a href="#kitchen-storage" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Kitchen storage</a></div><div><a href="#electronics" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Electronics</a><a href="#phone-accessories" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Phone accessories</a><a href="#chargers-and-power-banks" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Chargers and power banks</a><a href="#headphones-and-speakers" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Headphones and speakers</a><a href="#smart-home" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Smart home</a><a href="#desk-tech" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Desk tech</a><a href="#cables-and-adapters" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Cables and adapters</a></div><div><a href="#fashion" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Fashion</a><a href="#bags-and-wallets" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Bags and wallets</a><a href="#watches" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Watches</a><a href="#jewelry" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Jewelry</a><a href="#sunglasses" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Sunglasses</a><a href="#scarves-and-hats" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Scarves and hats</a><a href="#belts" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Belts</a></div><div><a href="#beauty" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Beauty</a><a href="#makeup-bags" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Makeup bags</a><a href="#hair-tools" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Hair tools</a><a href="#vanity-mirrors" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Vanity mirrors</a><a href="#brushes" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Brushes</a><a href="#organizers" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Organizers</a><a href="#nail-tools" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Nail tools</a></div><div><a href="#sports" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Sports</a><a href="#fitness" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Fitness</a><a href="#yoga" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Yoga</a><a href="#water-bottles" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Water bottles</a><a href="#camping" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Camping</a><a href="#travel-gear" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Travel gear</a></div><div><a href="#pets" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Pets</a><a href="#beds-and-blankets" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Beds and blankets</a><a href="#bowls-and-feeders" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Bowls and feeders</a><a href="#toys" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Toys</a><a href="#walk-and-travel" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Walk and travel</a></div><div><a href="#books" class="lc-ml" style="display: block; margin-bottom: 6px; font-size: 15px; font-weight: 700; color: #1F2A2E; text-decoration: none;">Books</a><a href="#journals-and-notebooks" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Journals and notebooks</a><a href="#planners" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Planners</a><a href="#pens" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Pens</a><a href="#coffee-table-books" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Coffee table books</a><a href="#bookends" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Bookends</a><a href="#desk-accessories" class="lc-ml" style="display: block; padding: 4px 0; font-size: 14px; color: #5A666A; text-decoration: none;">Desk accessories</a></div></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8; display: flex; gap: 28px;"><a href="#bundles" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Bundles →</a><a href="#under-50" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Under $50 →</a><a href="#new" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">New In →</a></div></div></div>
+<div style="flex: 1; min-width: 0; margin-left: 10px; display: flex; align-items: center; justify-content: space-between; gap: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: none;">
+<div class="lc-mi"><a href="#gifts" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; background: #F7E3D8; color: #A84B26;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="12" rx="2"></rect><path d="M12 9v12M3 13h18M12 9c-2-4-6-4-6-1.5S10 9 12 9c2 0 6-.5 6-1.5S14 5 12 9"></path></svg>Gifts<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Gifts menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Gifts by person</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#for-him" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For him</a><a href="#for-her" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For her</a><a href="#for-the-host" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For the host</a><a href="#for-pet-lovers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For pet lovers</a><a href="#for-the-home-office" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For the home office</a><a href="#for-new-homeowners" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">For new homeowners</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Gifts by price</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#under-25" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Under $25</a><a href="#under-50" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Under $50</a><a href="#under-100" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Under $100</a><a href="#gift-sets-and-bundles" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Gift sets and bundles</a><a href="#personalized-gifts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Personalized gifts</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#gifts" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Gifts →</a></div></div></div>
+<div class="lc-mi"><a href="#decor" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Home Decor<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Home Decor menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#vases-and-planters" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Vases and planters</a><a href="#candles-and-scents" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Candles and scents</a><a href="#wall-art" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Wall art</a><a href="#mirrors" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Mirrors</a><a href="#throws-and-pillows" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Throws and pillows</a><a href="#lighting" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Lighting</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-decor" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in decor</a><a href="#bestsellers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bestsellers</a><a href="#decor-under-50" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Decor under $50</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#decor" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Home Decor →</a></div></div></div>
+<div class="lc-mi"><a href="#furniture" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Furniture<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Furniture menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by room</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#living-room" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Living room</a><a href="#bedroom" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bedroom</a><a href="#home-office" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Home office</a><a href="#bar-carts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bar carts</a><a href="#storage-and-shelves" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Storage and shelves</a><a href="#outdoor" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Outdoor</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-furniture" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in furniture</a><a href="#bestsellers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bestsellers</a><a href="#small-space-picks" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Small-space picks</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#furniture" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Furniture →</a></div></div></div>
+<div class="lc-mi"><a href="#kitchen" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Kitchen<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Kitchen menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#kitchen-and-bar" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Kitchen and Bar</a><a href="#glassware" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Glassware</a><a href="#serveware" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Serveware</a><a href="#cookware" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Cookware</a><a href="#coffee-and-tea" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Coffee and tea</a><a href="#kitchen-storage" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Kitchen storage</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#bar-gift-sets" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bar gift sets</a><a href="#bestsellers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bestsellers</a><a href="#kitchen-under-50" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Kitchen under $50</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#kitchen" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Kitchen →</a></div></div></div>
+<div class="lc-mi"><a href="#electronics" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Electronics<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Electronics menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#phone-accessories" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Phone accessories</a><a href="#chargers-and-power-banks" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Chargers and power banks</a><a href="#headphones-and-speakers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Headphones and speakers</a><a href="#smart-home" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Smart home</a><a href="#desk-tech" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Desk tech</a><a href="#cables-and-adapters" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Cables and adapters</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-tech" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in tech</a><a href="#tech-gifts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Tech gifts</a><a href="#tech-under-50" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Tech under $50</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#electronics" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Electronics →</a></div></div></div>
+<div class="lc-mi"><a href="#fashion" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Fashion<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Fashion menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#bags-and-wallets" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bags and wallets</a><a href="#watches" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Watches</a><a href="#jewelry" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Jewelry</a><a href="#sunglasses" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Sunglasses</a><a href="#scarves-and-hats" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Scarves and hats</a><a href="#belts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Belts</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-fashion" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in fashion</a><a href="#gifts-for-her" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Gifts for her</a><a href="#gifts-for-him" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Gifts for him</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#fashion" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Fashion →</a></div></div></div>
+<div class="lc-mi"><a href="#beauty" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Beauty<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Beauty menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Tools and accessories</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#makeup-bags" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Makeup bags</a><a href="#hair-tools" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Hair tools</a><a href="#vanity-mirrors" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Vanity mirrors</a><a href="#brushes" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Brushes</a><a href="#organizers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Organizers</a><a href="#nail-tools" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Nail tools</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-beauty" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in beauty</a><a href="#beauty-gift-sets" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Beauty gift sets</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#beauty" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Beauty →</a></div></div></div>
+<div class="lc-mi"><a href="#sports" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Sports<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Sports menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#fitness" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Fitness</a><a href="#yoga" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Yoga</a><a href="#water-bottles" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Water bottles</a><a href="#camping" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Camping</a><a href="#travel-gear" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Travel gear</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-sports" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in sports</a><a href="#fitness-gifts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Fitness gifts</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#sports" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Sports →</a></div></div></div>
+<div class="lc-mi"><a href="#pets" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Pets<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Pets menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#beds-and-blankets" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Beds and blankets</a><a href="#bowls-and-feeders" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bowls and feeders</a><a href="#toys" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Toys</a><a href="#walk-and-travel" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Walk and travel</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-pets" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in pets</a><a href="#gifts-for-pet-lovers" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Gifts for pet lovers</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#pets" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Pets →</a></div></div></div>
+<div class="lc-mi"><a href="#books" aria-haspopup="true" style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 36px; padding: 0 8px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; background: transparent; color: #1F2A2E;">Books<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></a><div class="lc-mega" role="region" aria-label="Books menu"><div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px 24px; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 300px; gap: 40px;"><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Shop by type</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px;"><a href="#journals-and-notebooks" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Journals and notebooks</a><a href="#planners" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Planners</a><a href="#pens" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Pens</a><a href="#coffee-table-books" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Coffee table books</a><a href="#bookends" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Bookends</a><a href="#desk-accessories" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Desk accessories</a></div></div><div><span style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5A666A;">Popular</span><div style="display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); column-gap: 32px;"><a href="#new-in-stationery" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">New in stationery</a><a href="#stationery-gifts" class="lc-ml" style="display: block; padding: 6px 0; font-size: 15px; color: #1F2A2E; text-decoration: none;">Stationery gifts</a></div></div><a href="#gifts" class="lc-mpromo" style="display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 220px; padding: 22px; border-radius: 14px; background: #F7E3D8; color: #1F2A2E; text-decoration: none; box-sizing: border-box;"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: #B4532C; color: #FFFFFF;">Holiday sale</span><span style="font-family: 'Young Serif', Georgia, serif; font-size: 24px; line-height: 1.15;">20% off gifts until Nov 30</span><span style="font-size: 14px; font-weight: 600; color: #A84B26;">Shop gifts →</span></a></div><div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px 18px; border-top: 1px solid #EFE6D8;"><a href="#books" style="font-size: 14px; font-weight: 600; color: #1F5C5A; text-decoration: none;">Shop all Books →</a></div></div></div>
+</div>
+
+<div style="flex: none; display: flex; align-items: center; gap: 16px; margin-left: 16px; padding-left: 16px; border-left: 1px solid #E4D9C8; font-size: 13px; color: #5A666A;">
+<a href="#track" style="color: #5A666A; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path><circle cx="7" cy="18" r="1.6"></circle><circle cx="17" cy="18" r="1.6"></circle></svg>Track order</a>
+<a href="#help" style="color: #5A666A; text-decoration: none;">Help</a>
+</div>
+</div>
+</nav>
+</header>
+
+<main id="top">
+
+<section aria-label="Featured offers" style="max-width: 1280px; margin: 0 auto; padding: 24px 24px 0;">
+<div class="lc-hero-grid" style="display: grid; grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr); gap: 16px;">
+
+<div style="position: relative; height: 380px; border-radius: 20px; overflow: hidden; background: {{slide.bg}}; color: {{slide.fg}};">
+<div aria-hidden="true" class="lc-hero-stage" style="position: absolute; right: -90px; top: 50%; transform: translateY(-50%); width: 460px; height: 460px; border-radius: 999px; background: {{slide.circle}};"></div>
+<div aria-hidden="true" class="lc-hero-stage" style="position: absolute; right: 150px; top: 34px; width: 14px; height: 14px; border-radius: 999px; background: #E8875E;"></div>
+
+<div class="lc-slide-text" style="position: relative; height: 100%; max-width: 52%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 0 0 24px 56px;">
+<span style="align-self: flex-start; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: {{slide.chipBg}}; color: {{slide.chipFg}};">{{slide.eyebrow}}</span>
+<h1 style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 46px; line-height: 1.06; letter-spacing: -0.01em; text-wrap: balance;">{{slide.title}}</h1>
+<p style="margin: 0; font-size: 17px; line-height: 1.5; max-width: 26em; opacity: 0.9;">{{slide.sub}}</p>
+<div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+<a href="{{slide.href}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 50px; padding: 0 24px; border-radius: 10px; background: {{slide.ctaBg}}; color: {{slide.ctaFg}}; font-weight: 600; text-decoration: none;">{{slide.cta}}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<span style="font-size: 14px; opacity: 0.85;">Ships from USA · 30-day returns</span>
+</div>
+</div>
+
+<div class="lc-hero-stage" style="position: absolute; right: 64px; top: 50%; transform: translateY(-50%); width: 250px;">
+<div style="background: #FFFFFF; border-radius: 18px; padding: 12px; box-shadow: 0 2px 6px rgba(31,42,46,0.08), 0 18px 40px rgba(31,42,46,0.18); display: flex; flex-direction: column; gap: 10px;">
+<div role="img" aria-label="{{slide.alt}}" style="aspect-ratio: 1 / 1; border-radius: 12px; background: {{slide.photoBg}}; display: flex; align-items: flex-end; padding: 10px; box-sizing: border-box;"><span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 4px 8px; border-radius: 6px;">{{slide.photo}}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 0 4px 4px; color: #1F2A2E;">
+<span style="font-size: 14px; font-weight: 600;">{{slide.product}}</span>
+<span style="font-size: 14px; font-weight: 700;">{{slide.productPrice}}</span>
+</div>
+</div>
+<div style="position: absolute; left: -38px; top: -26px; width: 92px; height: 92px; border-radius: 999px; background: #B4532C; color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-10deg); box-shadow: 0 6px 16px rgba(31,42,46,0.2); text-align: center; line-height: 1.05;">
+<span style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;">{{slide.stickerTop}}</span>
+<span style="font-size: 24px; font-weight: 700;">{{slide.stickerBig}}</span>
+</div>
+</div>
+
+<div class="lc-slide-dots" style="position: absolute; left: 56px; bottom: 24px; display: flex; align-items: center; gap: 6px;">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="4">
+<button type="button" aria-label="{{d.label}}" onClick="{{d.pick}}" style="width: {{d.w}}; height: 6px; padding: 0; border: 0; border-radius: 999px; background: {{d.bg}}; cursor: pointer;"></button>
+</sc-for>
+</div>
+<div style="position: absolute; right: 20px; bottom: 20px; display: flex; gap: 8px;">
+<button type="button" aria-label="Previous offer" onClick="{{prev}}" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center; cursor: pointer; box-shadow: 0 2px 8px rgba(31,42,46,0.15);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></button>
+<button type="button" aria-label="Next offer" onClick="{{next}}" style="width: 44px; height: 44px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center; cursor: pointer; box-shadow: 0 2px 8px rgba(31,42,46,0.15);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<a href="#under-50" style="position: relative; overflow: hidden; border-radius: 20px; background: #E8DCCB; color: #1F2A2E; text-decoration: none; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 182px; box-sizing: border-box;">
+<div aria-hidden="true" style="position: absolute; right: -40px; bottom: -40px; width: 150px; height: 150px; border-radius: 999px; background: #F3EEE6;"></div>
+<div style="position: relative; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A84B26;">Deals</span>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.1;">Gifts under $50</span>
+<span style="font-size: 14px; color: #5A666A;">Desk, decor and bar finds from $24</span>
+</div>
+<span style="position: relative; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 15px; color: #1F5C5A;">Shop deals<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</a>
+<a href="#shipping" style="position: relative; overflow: hidden; border-radius: 20px; background: #E3EFEC; color: #1F2A2E; text-decoration: none; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; min-height: 182px; box-sizing: border-box;">
+<svg aria-hidden="true" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#C7DDD8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: -14px; bottom: -18px;"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path><circle cx="7" cy="18" r="1.6"></circle><circle cx="17" cy="18" r="1.6"></circle></svg>
+<div style="position: relative; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5C5A;">Shipping</span>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.1;">Free US shipping over $50</span>
+<span style="font-size: 14px; color: #5A666A;">Delivered in 3–7 days from US warehouses</span>
+</div>
+<span style="position: relative; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 15px; color: #1F5C5A;">How shipping works<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</a>
+</div>
+
+</div>
+</section>
+<section aria-label="Shop by category" style="max-width: 1280px; margin: 0 auto; padding: 24px 24px 0;">
+<div style="padding: 16px 0 8px; display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 20px 8px;">
+<a href="#gifts" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #F7E3D8; color: #A84B26; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="12" rx="2"></rect><path d="M12 9v12M3 13h18M12 9c-2-4-6-4-6-1.5S10 9 12 9c2 0 6-.5 6-1.5S14 5 12 9"></path></svg></span>
+<span style="font-size: 14px; font-weight: 600; color: #A84B26; text-align: center; line-height: 1.25;">Holiday Gifts</span>
+</a>
+<a href="#decor" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #EFE6D8; color: #1F2A2E; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21h6M12 21v-4"></path><path d="M8 3h8l-1 6a3 3 0 0 1-6 0z"></path><path d="M6 13c0 2.2 2.7 4 6 4s6-1.8 6-4"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Home Decor</span>
+</a>
+<a href="#office" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #E3EFEC; color: #1F5C5A; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Home Office</span>
+</a>
+<a href="#pets" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #F7E3D8; color: #A84B26; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="9" r="1.8"></circle><circle cx="10" cy="5.5" r="1.8"></circle><circle cx="14" cy="5.5" r="1.8"></circle><circle cx="18" cy="9" r="1.8"></circle><path d="M12 11c-3 0-6 4.5-6 7 0 1.5 1.3 2.5 3 2.5 1.2 0 2-.6 3-.6s1.8.6 3 .6c1.7 0 3-1 3-2.5 0-2.5-3-7-6-7z"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Pets</span>
+</a>
+<a href="#furniture" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #EFE6D8; color: #1F2A2E; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4"></path><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z"></path><path d="M5 18v2M19 18v2"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Furniture</span>
+</a>
+<a href="#personalized" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #E3EFEC; color: #1F5C5A; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Personalized</span>
+</a>
+<a href="#bar" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #F7E3D8; color: #A84B26; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-1 8a4 4 0 0 1-8 0z"></path><path d="M12 15v6M8 21h8"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Kitchen and Bar</span>
+</a>
+<a href="#bundles" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #EFE6D8; color: #1F2A2E; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"></path><path d="m3 8 9 5 9-5M12 13v8"></path></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Bundles</span>
+</a>
+<a href="#under-50" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #E3EFEC; color: #1F5C5A; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">Under $50</span>
+</a>
+<a href="#all" style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; min-width: 0;">
+<span style="width: 68px; height: 68px; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; border: 1.5px solid #E4D9C8; box-sizing: border-box; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="2.2"></circle><circle cx="17" cy="7" r="2.2"></circle><circle cx="7" cy="17" r="2.2"></circle><circle cx="17" cy="17" r="2.2"></circle></svg></span>
+<span style="font-size: 14px; font-weight: 500; color: #1F2A2E; text-align: center; line-height: 1.25;">View all</span>
+</a>
+</div>
+</section>
+
+
+<section id="bestsellers" aria-labelledby="bestsellers-h" style="max-width: 1280px; margin: 0 auto; padding: 24px 24px 0;">
+<div style="padding: 24px 0 32px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 20px;">
+<h2 id="bestsellers-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">Top picks for you</h2>
+<a href="#deals" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #1F2A2E; text-decoration: none;">See all deals<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+<sc-for list="{{products}}" as="p" hint-placeholder-count="5">
+<article style="position: relative; background: #FFFFFF; border: 1px solid #EFE6D8; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+<a href="#product" style="text-decoration: none; color: #1F2A2E; display: flex; flex-direction: column;">
+<div role="img" aria-label="{{p.alt}}" style="position: relative; aspect-ratio: 5 / 4; background: #F3EEE6; margin: 8px 8px 0; border-radius: 12px; display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; padding: 10px; box-sizing: border-box;">
+<sc-if value="{{p.hasPct}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #B4532C; color: #FFFFFF;">{{p.pct}}</span></sc-if>
+<sc-if value="{{p.showTag}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: {{p.badgeBg}}; color: {{p.badgeFg}};">{{p.badge}}</span></sc-if>
+<span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">{{p.photo}}</span>
+<sc-if value="{{p.hasSwatches}}" hint-placeholder-val="{{ false }}"><span style="display: flex; gap: 4px; background: #FFFFFF; padding: 4px 6px; border-radius: 999px;"><sc-for list="{{p.swatches}}" as="sw" hint-placeholder-count="2"><span title="{{sw.name}}" style="width: 14px; height: 14px; border-radius: 999px; background: {{sw.hex}}; box-shadow: inset 0 0 0 1px rgba(31,42,46,0.18);"></span></sc-for></span></sc-if>
+</div>
+<div style="padding: 10px 14px 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #5A666A;"><span aria-hidden="true" style="color: #D9CDBB; letter-spacing: 1px;">★★★★★</span>No reviews yet</span>
+<span style="font-size: 15px; font-weight: 600; line-height: 1.3; min-height: 2.6em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{p.name}}</span>
+</div>
+</a>
+<div style="padding: 6px 14px 0;">
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+<span style="font-size: 19px; font-weight: 700; color: {{p.priceColor}};">{{p.price}}</span>
+<sc-if value="{{p.hasWas}}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; color: #5A666A; text-decoration: line-through;">{{p.was}}</span><span style="font-size: 13px; font-weight: 600; color: #2F6B3A;">{{p.saveText}}</span></sc-if>
+</div>
+</div>
+<div style="padding: 10px 14px 14px; margin-top: auto;">
+<button type="button" style="width: 100%; height: 42px; border: 0; border-radius: 10px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Add to cart</button>
+</div>
+<button type="button" aria-label="Save {{p.name}} to wishlist" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 0; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 4px rgba(31,42,46,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></button>
+</article>
+</sc-for>
+</div>
+</div>
+</section>
+
+<section aria-label="Featured collections" style="max-width: 1280px; margin: 0 auto; padding: 8px 24px 48px;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+<a href="#new" style="position: relative; overflow: hidden; display: flex; align-items: stretch; gap: 16px; min-height: 200px; padding: 22px; box-sizing: border-box; border-radius: 16px; background: #E3EFEC; color: #1F2A2E; text-decoration: none;">
+<div style="flex: 1 1 55%; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5C5A;">New arrivals</span>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12; text-wrap: balance;">Fresh finds, just in</span>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #1F5C5A;">Shop now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</div>
+<div role="img" aria-label="Photo placeholder: new ceramic vase set" style="flex: 0 0 42%; border-radius: 12px; background: #F4F9F7; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box;"><span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">Photo: new vase set</span></div>
+</a>
+<a href="#decor" style="position: relative; overflow: hidden; display: flex; align-items: stretch; gap: 16px; min-height: 200px; padding: 22px; box-sizing: border-box; border-radius: 16px; background: #EFE6D8; color: #1F2A2E; text-decoration: none;">
+<div style="flex: 1 1 55%; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A84B26;">Home refresh</span>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12; text-wrap: balance;">Make your space feel new</span>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #1F5C5A;">Shop now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</div>
+<div role="img" aria-label="Photo placeholder: accent chair with a throw" style="flex: 0 0 42%; border-radius: 12px; background: #F8F3EC; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box;"><span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">Photo: accent chair</span></div>
+</a>
+<a href="#office" style="position: relative; overflow: hidden; display: flex; align-items: stretch; gap: 16px; min-height: 200px; padding: 22px; box-sizing: border-box; border-radius: 16px; background: #E4E9EC; color: #1F2A2E; text-decoration: none;">
+<div style="flex: 1 1 55%; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5C5A;">Desk essentials</span>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12; text-wrap: balance;">Upgrade your workspace</span>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #1F5C5A;">Shop now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+</div>
+<div role="img" aria-label="Photo placeholder: walnut monitor riser on a desk" style="flex: 0 0 42%; border-radius: 12px; background: #F3F6F7; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box;"><span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">Photo: desk setup</span></div>
+</a>
+</div>
+</section>
+
+<section id="under-50" aria-labelledby="under-50-h" style="max-width: 1280px; margin: 0 auto; padding: 0 24px 56px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<h2 id="under-50-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">Deals under $50</h2>
+<span style="font-size: 15px; color: #5A666A;">Thoughtful gifts and everyday upgrades, all under $50.</span>
+</div>
+<div role="group" aria-label="Filter deals" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{dealFilters}}" as="f" hint-placeholder-count="5">
+<button type="button" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="height: 38px; padding: 0 16px; border-radius: 999px; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">{{f.label}}</button>
+</sc-for>
+<a href="#under-50-all" style="display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 4px 0 8px; font-weight: 600; font-size: 14px; color: #1F2A2E; text-decoration: none;">Shop all gifts under $50<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+<sc-for list="{{under50}}" as="p" hint-placeholder-count="5">
+<article style="position: relative; background: #FFFFFF; border: 1px solid #EFE6D8; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+<a href="#product" style="text-decoration: none; color: #1F2A2E; display: flex; flex-direction: column;">
+<div role="img" aria-label="{{p.alt}}" style="position: relative; aspect-ratio: 5 / 4; background: #F3EEE6; margin: 8px 8px 0; border-radius: 12px; display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; padding: 10px; box-sizing: border-box;">
+<sc-if value="{{p.hasPct}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #B4532C; color: #FFFFFF;">{{p.pct}}</span></sc-if>
+<sc-if value="{{p.showTag}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: {{p.badgeBg}}; color: {{p.badgeFg}};">{{p.badge}}</span></sc-if>
+<span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">{{p.photo}}</span>
+<sc-if value="{{p.hasSwatches}}" hint-placeholder-val="{{ false }}"><span style="display: flex; gap: 4px; background: #FFFFFF; padding: 4px 6px; border-radius: 999px;"><sc-for list="{{p.swatches}}" as="sw" hint-placeholder-count="2"><span title="{{sw.name}}" style="width: 14px; height: 14px; border-radius: 999px; background: {{sw.hex}}; box-shadow: inset 0 0 0 1px rgba(31,42,46,0.18);"></span></sc-for></span></sc-if>
+</div>
+<div style="padding: 10px 14px 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #5A666A;"><span aria-hidden="true" style="color: #D9CDBB; letter-spacing: 1px;">★★★★★</span>No reviews yet</span>
+<span style="font-size: 15px; font-weight: 600; line-height: 1.3; min-height: 2.6em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{p.name}}</span>
+</div>
+</a>
+<div style="padding: 6px 14px 0;">
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+<span style="font-size: 19px; font-weight: 700; color: {{p.priceColor}};">{{p.price}}</span>
+<sc-if value="{{p.hasWas}}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; color: #5A666A; text-decoration: line-through;">{{p.was}}</span><span style="font-size: 13px; font-weight: 600; color: #2F6B3A;">{{p.saveText}}</span></sc-if>
+</div>
+</div>
+<div style="padding: 10px 14px 14px; margin-top: auto;">
+<button type="button" style="width: 100%; height: 42px; border: 0; border-radius: 10px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Add to cart</button>
+</div>
+<button type="button" aria-label="Save {{p.name}} to wishlist" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 0; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 4px rgba(31,42,46,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></button>
+</article>
+</sc-for>
+</div>
+</section>
+
+<section id="gifts" aria-labelledby="bundle-h" style="max-width: 1280px; margin: 0 auto; padding: 16px 24px 64px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 24px;">
+<h2 id="bundle-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">Gift sets</h2>
+<a href="#bundles" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #1F2A2E; text-decoration: none;">Shop all gift sets<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+<div class="lc-bundle" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: center;">
+<div style="position: relative; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; height: 400px;">
+<div role="img" aria-label="Photo placeholder: Barrel Decanter Set" style="position: relative; border-radius: 16px; background: #E3EFEC; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; grid-row: span 2;">
+<span style="font-size: 12px; font-weight: 600; color: #1F2A2E; background: #FFFFFF; padding: 5px 10px; border-radius: 999px;">Barrel Decanter Set</span>
+</div>
+<div role="img" aria-label="Photo placeholder: Whiskey Stones" style="position: relative; border-radius: 16px; background: #EFE6D8; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; ">
+<span style="font-size: 12px; font-weight: 600; color: #1F2A2E; background: #FFFFFF; padding: 5px 10px; border-radius: 999px;">Whiskey Stones</span>
+</div>
+<div role="img" aria-label="Photo placeholder: Charcuterie Set" style="position: relative; border-radius: 16px; background: #F7E3D8; display: flex; align-items: flex-end; padding: 12px; box-sizing: border-box; ">
+<span style="font-size: 12px; font-weight: 600; color: #1F2A2E; background: #FFFFFF; padding: 5px 10px; border-radius: 999px;">Charcuterie Set</span>
+</div>
+<span style="position: absolute; top: 14px; left: 14px; font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: #B4532C; color: #FFFFFF;">Save $18</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A84B26;">3 pieces · 1 gift box</span>
+<h3 style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.08;">The Host Gift Set</h3>
+<p style="margin: 0; font-size: 16px; color: #5A666A; max-width: 30em;">Everything for a cozy night in, packed together and ready to give.</p>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+<li style="display: flex; align-items: center; gap: 10px; font-size: 15px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg><span style="flex: 1; min-width: 0;">Barrel Decanter Set</span><span style="font-size: 13px; color: #5A666A;">worth $59</span></li>
+<li style="display: flex; align-items: center; gap: 10px; font-size: 15px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg><span style="flex: 1; min-width: 0;">Whiskey Stones Gift Box</span><span style="font-size: 13px; color: #5A666A;">worth $29</span></li>
+<li style="display: flex; align-items: center; gap: 10px; font-size: 15px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg><span style="flex: 1; min-width: 0;">Acacia Charcuterie Set</span><span style="font-size: 13px; color: #5A666A;">worth $49</span></li>
+</ul>
+<div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 12px; padding-top: 4px;">
+<span style="font-size: 34px; font-weight: 700; line-height: 1;">$119</span>
+<span style="font-size: 16px; color: #5A666A; text-decoration: line-through;">$137</span>
+<span style="font-size: 13px; font-weight: 700; color: #2F6B3A; background: #E4F0E2; padding: 3px 8px; border-radius: 999px;">You save $18</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<button type="button" style="flex: 1 1 220px; height: 52px; border: 0; border-radius: 10px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Add the set to cart</button>
+<a href="#product" style="height: 52px; padding: 0 22px; border-radius: 10px; border: 1.5px solid #1F2A2E; color: #1F2A2E; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">View details</a>
+</div>
+<span style="font-size: 13px; color: #5A666A;">Gift box included · Free gift note · Ships from USA in 3–7 days</span>
+</div>
+</div>
+</section>
+
+<section id="new" aria-labelledby="new-h" style="max-width: 1280px; margin: 0 auto; padding: 8px 24px 56px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 20px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<h2 id="new-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">New in</h2>
+<span style="font-size: 15px; color: #5A666A;">Fresh finds added this month.</span>
+</div>
+<div role="group" aria-label="Filter new arrivals" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{newTabs}" as="t" hint-placeholder-count="5">
+<button type="button" onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px;">
+<a href="#new-all" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: #1F2A2E; text-decoration: none;">View all new arrivals<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+<sc-for list="{{newInView}}" as="p" hint-placeholder-count="5">
+<article style="position: relative; background: #FFFFFF; border: 1px solid #EFE6D8; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+<a href="#product" style="text-decoration: none; color: #1F2A2E; display: flex; flex-direction: column;">
+<div role="img" aria-label="{{p.alt}}" style="position: relative; aspect-ratio: 5 / 4; background: #F3EEE6; margin: 8px 8px 0; border-radius: 12px; display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; padding: 10px; box-sizing: border-box;">
+<sc-if value="{{p.hasPct}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #B4532C; color: #FFFFFF;">{{p.pct}}</span></sc-if>
+<sc-if value="{{p.showTag}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: {{p.badgeBg}}; color: {{p.badgeFg}};">{{p.badge}}</span></sc-if>
+<span style="font-size: 11px; color: #5A666A; background: #FFFFFF; padding: 3px 7px; border-radius: 6px;">{{p.photo}}</span>
+<sc-if value="{{p.hasSwatches}}" hint-placeholder-val="{{ false }}"><span style="display: flex; gap: 4px; background: #FFFFFF; padding: 4px 6px; border-radius: 999px;"><sc-for list="{{p.swatches}}" as="sw" hint-placeholder-count="2"><span title="{{sw.name}}" style="width: 14px; height: 14px; border-radius: 999px; background: {{sw.hex}}; box-shadow: inset 0 0 0 1px rgba(31,42,46,0.18);"></span></sc-for></span></sc-if>
+</div>
+<div style="padding: 10px 14px 0; display: flex; flex-direction: column; gap: 4px;">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #5A666A;"><span aria-hidden="true" style="color: #D9CDBB; letter-spacing: 1px;">★★★★★</span>No reviews yet</span>
+<span style="font-size: 15px; font-weight: 600; line-height: 1.3; min-height: 2.6em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{p.name}}</span>
+</div>
+</a>
+<div style="padding: 6px 14px 0;">
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+<span style="font-size: 19px; font-weight: 700; color: {{p.priceColor}};">{{p.price}}</span>
+<sc-if value="{{p.hasWas}}" hint-placeholder-val="{{ true }}"><span style="font-size: 14px; color: #5A666A; text-decoration: line-through;">{{p.was}}</span><span style="font-size: 13px; font-weight: 600; color: #2F6B3A;">{{p.saveText}}</span></sc-if>
+</div>
+</div>
+<div style="padding: 10px 14px 14px; margin-top: auto;">
+<button type="button" style="width: 100%; height: 42px; border: 0; border-radius: 10px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Add to cart</button>
+</div>
+<button type="button" aria-label="Save {{p.name}} to wishlist" style="position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 0; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 4px rgba(31,42,46,0.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></button>
+</article>
+</sc-for>
+</div>
+</section>
+
+
+
+<section id="finn" aria-labelledby="finn-h" style="max-width: 1280px; margin: 0 auto; padding: 8px 24px 56px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 20px;">
+<div style="display: flex; align-items: center; gap: 14px;">
+<span aria-hidden="true" style="flex: none; width: 56px; height: 56px; border-radius: 999px; background: #1F5C5A; color: #FAF7F2; display: grid; place-items: center; font-family: 'Young Serif', Georgia, serif; font-size: 24px; box-shadow: 0 0 0 3px #FAF7F2, 0 0 0 5px #E8875E;">F</span>
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<h2 id="finn-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">Finds by Finn</h2>
+<span style="font-size: 15px; color: #5A666A;">Hi, I'm Finn. I find the good stuff so you don't have to. Shop straight from the video.</span>
+</div>
+</div>
+<a href="#instagram" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: #1F2A2E; text-decoration: none;">Watch more on Instagram<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+<sc-for list="{{reels}}" as="r" hint-placeholder-count="5">
+<article style="display: flex; flex-direction: column; gap: 10px;">
+<div style="position: relative; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; background: {{r.bg}};">
+<span style="position: absolute; top: 10px; left: 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #1F2A2E; background: rgba(255,255,255,0.92); padding: 4px 8px 4px 4px; border-radius: 999px;"><span aria-hidden="true" style="width: 20px; height: 20px; border-radius: 999px; background: #1F5C5A; color: #FAF7F2; display: grid; place-items: center; font-size: 11px;">F</span>Finn</span>
+<span style="position: absolute; top: 10px; right: 10px; font-size: 12px; font-weight: 600; color: #FAF7F2; background: rgba(31,42,46,0.75); padding: 3px 8px; border-radius: 999px;">{{r.duration}}</span>
+<button type="button" aria-label="Play video: {{r.title}}" style="position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 999px; border: 0; background: rgba(31,42,46,0.75); display: grid; place-items: center; cursor: pointer;"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#FAF7F2"></path></svg></button>
+<span style="position: absolute; top: 48px; left: 12px; right: 12px; font-size: 11px; color: #5A666A; text-align: center;">Video placeholder</span>
+<div style="position: absolute; left: 8px; right: 8px; bottom: 8px; background: #FFFFFF; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 14px rgba(31,42,46,0.15);">
+<a href="#product" style="display: flex; align-items: center; gap: 8px; color: #1F2A2E; text-decoration: none; min-width: 0;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; border-radius: 8px; background: #F3EEE6;"></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25;"><span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{r.product}}</span><span style="font-size: 13px; font-weight: 700;">{{r.price}}</span></span>
+</a>
+<button type="button" style="height: 36px; border: 0; border-radius: 8px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Add to cart</button>
+</div>
+</div>
+<span style="font-size: 14px; font-weight: 600; line-height: 1.35;">{{r.title}}</span>
+</article>
+</sc-for>
+</div>
+</section>
+
+<sc-if value="{{showReviews}}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="reviews-h" style="max-width: 1280px; margin: 0 auto; padding: 8px 24px 64px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 24px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<h2 id="reviews-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">What customers say</h2>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; background: #F7E3D8; color: #A84B26;">Example content</span>
+</div>
+<a href="#reviews" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: #1F2A2E; text-decoration: none;">Read all reviews<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+<div class="lc-reviews" style="display: grid; grid-template-columns: 260px 300px minmax(0, 1fr); gap: 24px; align-items: stretch;">
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 4px 24px 0 0; border-right: 1px solid #E4D9C8;">
+<span style="font-size: 56px; font-weight: 700; line-height: 1;">4.8</span>
+<span aria-hidden="true" style="color: #B07A12; font-size: 20px; letter-spacing: 2px;">★★★★★</span>
+<span style="font-size: 14px; color: #5A666A;">Based on [number] reviews</span>
+<div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
+<sc-for list="{{revBars}}" as="b" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #5A666A;">
+<span style="width: 24px;">{{b.label}}</span>
+<span style="flex: 1; height: 6px; border-radius: 999px; background: #E4D9C8; overflow: hidden;"><span style="display: block; height: 100%; width: {{b.w}}; background: #B07A12;"></span></span>
+<span style="width: 34px; text-align: right;">{{b.w}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding-top: 16px; border-top: 1px solid #E4D9C8;">
+<span style="font-size: 13px; font-weight: 600;">Customer photos and videos</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;">
+<span role="img" aria-label="Customer photo placeholder" style="aspect-ratio: 1 / 1; border-radius: 8px; background: #E3EFEC;"></span>
+<span role="img" aria-label="Customer video placeholder" style="position: relative; aspect-ratio: 1 / 1; border-radius: 8px; background: #EFE6D8; display: grid; place-items: center;"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#1F2A2E"></path></svg></span>
+<span role="img" aria-label="Customer photo placeholder" style="aspect-ratio: 1 / 1; border-radius: 8px; background: #F7E3D8;"></span>
+<a href="#reviews" aria-label="See all customer photos and videos" style="aspect-ratio: 1 / 1; border-radius: 8px; background: #1F2A2E; color: #FAF7F2; display: grid; place-items: center; font-size: 12px; font-weight: 700; text-decoration: none;">See all</a>
+</div>
+</div>
+<a href="#write-review" style="margin-top: auto; display: inline-flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; border: 1.5px solid #1F2A2E; color: #1F2A2E; font-weight: 600; text-decoration: none;">Write a review</a>
+</div>
+
+<figure aria-label="Video review" style="margin: 0; position: relative; aspect-ratio: 9 / 16; width: 100%; border-radius: 16px; overflow: hidden; background: #DCE6E3; display: flex; flex-direction: column; justify-content: flex-end;">
+<span style="position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #1F2A2E; background: #FFFFFF; padding: 4px 10px; border-radius: 999px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="m16 10 5-3v10l-5-3z"></path></svg>Video review</span>
+<span style="position: absolute; top: 12px; right: 12px; font-size: 12px; font-weight: 600; color: #FAF7F2; background: rgba(31,42,46,0.75); padding: 4px 9px; border-radius: 999px;">0:38</span>
+<button type="button" aria-label="Play video review" style="position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 64px; height: 64px; border-radius: 999px; border: 0; background: rgba(31,42,46,0.75); display: grid; place-items: center; cursor: pointer;"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="#FAF7F2"></path></svg></button>
+<span style="position: absolute; top: 56px; left: 0; right: 0; text-align: center; font-size: 11px; color: #5A666A;">Customer video placeholder</span>
+<figcaption style="position: relative; margin: 12px; background: #FFFFFF; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+<span aria-hidden="true" style="color: #B07A12; letter-spacing: 2px; font-size: 14px;">★★★★★</span>
+<span style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">[Customer name]<span style="font-size: 12px; font-weight: 600; color: #2F6B3A; display: inline-flex; align-items: center; gap: 3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg>Verified buyer</span></span>
+<a href="#product" style="font-size: 13px; color: #5A666A;">Reviewed: Barrel Decanter Set</a>
+</figcaption>
+</figure>
+<div style="display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+<figure aria-label="Written review" style="flex: 1 1 0; margin: 0; background: #FFFFFF; border: 1px solid #EFE6D8; border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span aria-hidden="true" style="color: #B07A12; letter-spacing: 2px; font-size: 15px;">★★★★★</span>
+<span style="font-size: 12px; color: #5A666A;">[date]</span>
+</div>
+<span style="font-size: 17px; font-weight: 600;">[Review headline]</span>
+<blockquote style="margin: 0; font-size: 15px; line-height: 1.6; color: #1F2A2E;">[Customer review text goes here. A few lines about the product, the delivery and how it looks at home.]</blockquote>
+<figcaption style="margin-top: auto; display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid #EFE6D8;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; border-radius: 999px; background: #EFE6D8; color: #1F2A2E; display: grid; place-items: center; font-weight: 700; font-size: 14px;">A</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 12px;">
+<span style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">[Customer name]<span style="font-size: 12px; font-weight: 600; color: #2F6B3A; display: inline-flex; align-items: center; gap: 3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg>Verified buyer</span></span>
+<a href="#product" style="font-size: 13px; color: #5A666A;">Reviewed: Walnut Monitor Riser</a>
+</span>
+</figcaption>
+</figure>
+<figure aria-label="Written review" style="flex: 1 1 0; margin: 0; background: #FFFFFF; border: 1px solid #EFE6D8; border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span aria-hidden="true" style="color: #B07A12; letter-spacing: 2px; font-size: 15px;">★★★★★</span>
+<span style="font-size: 12px; color: #5A666A;">[date]</span>
+</div>
+<span style="font-size: 17px; font-weight: 600;">[Review headline]</span>
+<blockquote style="margin: 0; font-size: 15px; line-height: 1.6; color: #1F2A2E;">[Customer review text goes here. A few lines about the product, the delivery and how it looks at home.]</blockquote>
+<figcaption style="margin-top: auto; display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid #EFE6D8;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; border-radius: 999px; background: #EFE6D8; color: #1F2A2E; display: grid; place-items: center; font-weight: 700; font-size: 14px;">M</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 12px;">
+<span style="font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">[Customer name]<span style="font-size: 12px; font-weight: 600; color: #2F6B3A; display: inline-flex; align-items: center; gap: 3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg>Verified buyer</span></span>
+<a href="#product" style="font-size: 13px; color: #5A666A;">Reviewed: Orthopedic Dog Bed</a>
+</span>
+</figcaption>
+</figure>
+</div>
+
+</div>
+</section>
+</sc-if>
+<section id="promise" aria-labelledby="rev-h" style="max-width: 1280px; margin: 0 auto; padding: 8px 24px 64px;">
+<div style="display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px;">
+<h2 id="rev-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.15;">Why shop with LuxCart</h2>
+<span style="font-size: 15px; color: #5A666A;">Three promises behind every order.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+<div style="position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 240px; padding: 28px; box-sizing: border-box; border-radius: 16px; background: #E3EFEC;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5C5A;">Quality first</span>
+<span style="flex: none; width: 56px; height: 56px; border-radius: 999px; background: #FFFFFF; color: #1F5C5A; display: grid; place-items: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12;">Tested before it is sold</span>
+<span style="font-size: 15px; line-height: 1.55; color: #5A666A; max-width: 30em;">We order and check a sample of every product. If we would not use it at home, we do not sell it.</span>
+</div>
+</div>
+<div style="position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 240px; padding: 28px; box-sizing: border-box; border-radius: 16px; background: #EFE6D8;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #A84B26;">30-day returns</span>
+<span style="flex: none; width: 56px; height: 56px; border-radius: 999px; background: #FFFFFF; color: #1F5C5A; display: grid; place-items: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"></path><path d="M4 4v4h4"></path></svg></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12;">Love it or send it back</span>
+<span style="font-size: 15px; line-height: 1.55; color: #5A666A; max-width: 30em;">Not quite right? Return it within 30 days for a full refund. No awkward questions.</span>
+</div>
+</div>
+<div style="position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 240px; padding: 28px; box-sizing: border-box; border-radius: 16px; background: #E4E9EC;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1F5C5A;">Real support</span>
+<span style="flex: none; width: 56px; height: 56px; border-radius: 999px; background: #FFFFFF; color: #1F5C5A; display: grid; place-items: center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"></path><path d="M8 9h8M8 12h5"></path></svg></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 26px; line-height: 1.12;">A real person replies</span>
+<span style="font-size: 15px; line-height: 1.55; color: #5A666A; max-width: 30em;">Questions about an order? Email us and a real person gets back to you within 24 hours.</span>
+</div>
+</div>
+</div>
+</section>
+
+<section id="newsletter" aria-labelledby="mail-h" style="max-width: 1280px; margin: 0 auto; padding: 0 24px 64px;">
+<div class="lc-mail" style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; align-items: center; background: #F7E3D8; border-radius: 20px; padding: 48px; box-sizing: border-box;">
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A84B26;">Join the LuxCart list</span>
+<h2 id="mail-h" style="margin: 0; font-family: 'Young Serif', Georgia, serif; font-weight: 400; font-size: 40px; line-height: 1.1;">Get 10% off your first order</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 15px;">
+<li style="display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg>10% off your first order</li>
+<li style="display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg>Early access to sales</li>
+<li style="display: flex; align-items: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m5 12 5 5L20 7"></path></svg>Gift guides before every holiday</li>
+</ul>
+<sc-if value="{{mailDone}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; gap: 12px; background: #FFFFFF; border-radius: 12px; padding: 16px 18px;">
+<span style="flex: none; width: 36px; height: 36px; border-radius: 999px; background: #E4F0E2; color: #2F6B3A; display: grid; place-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"></path></svg></span>
+<span style="display: flex; flex-direction: column;"><span style="font-weight: 600;">You're in!</span><span style="font-size: 14px; color: #5A666A;">Check your inbox for your 10% code.</span></span>
+</div>
+</sc-if>
+<sc-if value="{{mailOpen}}" hint-placeholder-val="{{ true }}">
+<form style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+<div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 4px;">
+<label for="email" style="font-size: 14px; font-weight: 600;">Email address</label>
+<input id="email" type="email" placeholder="you@example.com" onInput="{{onEmail}}" style="height: 52px; padding: 0 16px; border: 1.5px solid {{mailBorder}}; border-radius: 10px; font: inherit; background: #FFFFFF; color: #1F2A2E;">
+</div>
+<button type="button" onClick="{{onJoin}}" style="height: 52px; padding: 0 26px; border: 0; border-radius: 10px; background: #1F5C5A; color: #FAF7F2; font: inherit; font-weight: 600; cursor: pointer;">Get my 10% off</button>
+</form>
+</sc-if>
+<sc-if value="{{mailError}}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size: 14px; font-weight: 600; color: #A33A1F;">Enter a valid email address, like you@example.com.</span></sc-if>
+<span style="font-size: 13px; color: #5A666A;">We send 2–3 emails a month. Unsubscribe anytime. See our <a href="#privacy" style="color: #1F2A2E;">privacy policy</a>.</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 18px;">
+<div aria-label="Preview of the welcome email" style="width: 100%; max-width: 360px; background: #FFFFFF; border-radius: 18px; box-shadow: 0 2px 6px rgba(31,42,46,0.06), 0 18px 40px rgba(31,42,46,0.12); overflow: hidden; transform: rotate(-2deg);">
+<div style="display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid #EFE6D8;">
+<span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #1F5C5A; color: #FAF7F2; display: grid; place-items: center; font-family: 'Young Serif', Georgia, serif; font-size: 16px;">F</span>
+<span style="display: flex; flex-direction: column; line-height: 1.3; min-width: 0;"><span style="font-size: 13px; font-weight: 600;">Finn at LuxCart</span><span style="font-size: 12px; color: #5A666A;">Welcome! Here is your 10% off</span></span>
+</div>
+<div style="padding: 20px 18px 22px; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 22px; line-height: 1.2;">Thanks for joining. Your first find is on us.</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 2px dashed #E8875E; border-radius: 12px; padding: 14px 16px; background: #FDF6F2;">
+<span style="display: flex; flex-direction: column; line-height: 1.25;"><span style="font-size: 12px; color: #5A666A;">Your code</span><span style="font-size: 20px; font-weight: 700; letter-spacing: 0.06em;">WELCOME10</span></span>
+<span style="font-size: 28px; font-weight: 700; color: #A84B26;">10%</span>
+</div>
+<span style="font-size: 12px; color: #5A666A;">Valid on your first order. Example email.</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+<span style="font-size: 13px; color: #5A666A;">Follow along</span>
+<div style="display: flex; gap: 10px;">
+<a href="#instagram" aria-label="LuxCart on Instagram" style="width: 44px; height: 44px; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg></a>
+<a href="#youtube" aria-label="LuxCart on YouTube" style="width: 44px; height: 44px; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"></rect><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor"></path></svg></a>
+<a href="#tiktok" aria-label="LuxCart on TikTok" style="width: 44px; height: 44px; border-radius: 999px; background: #FFFFFF; color: #1F2A2E; display: grid; place-items: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"></path><path d="M14 3c.5 2.5 2.3 4 5 4.3"></path></svg></a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+
+
+
+<section aria-label="Why shop with LuxCart" style="border-top: 1px solid #E4D9C8;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 28px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px 24px;">
+<div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"></path><circle cx="7" cy="18" r="1.6"></circle><circle cx="17" cy="18" r="1.6"></circle></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 15px; font-weight: 600;">Ships from the USA</span><span style="font-size: 13px; color: #5A666A;">Delivered in 3–7 days</span></div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"></path><path d="M4 4v4h4"></path></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 15px; font-weight: 600;">30-day returns</span><span style="font-size: 13px; color: #5A666A;">Not in love? Send it back</span></div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 15px; font-weight: 600;">Secure checkout</span><span style="font-size: 13px; color: #5A666A;">PayPal, Apple Pay and cards</span></div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F5C5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="12" rx="2"></rect><path d="M12 9v12M3 13h18M12 9c-2-4-6-4-6-1.5S10 9 12 9c2 0 6-.5 6-1.5S14 5 12 9"></path></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 15px; font-weight: 600;">Gift-ready</span><span style="font-size: 13px; color: #5A666A;">Free gift note at checkout</span></div>
+</div>
+</div>
+</section>
+<footer style="background: #1F2A2E; color: #F3EEE6;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 64px 24px 28px; display: flex; flex-direction: column; gap: 48px;">
+<div class="lc-foot" style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 40px;">
+<div style="display: flex; flex-direction: column; gap: 18px; min-width: 0;">
+<span style="display: inline-flex; align-items: center; gap: 10px;">
+<svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#6CC0B4"></rect><path d="M34.5 15.5A12 12 0 0 0 14 22v13.5h20" fill="none" stroke="#0F201E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="34.5" cy="25.5" r="3.2" fill="#B4532C"></circle></svg>
+<span style="font-family: 'Young Serif', Georgia, serif; font-size: 28px; line-height: 1;">Lux<span style="color: #6CC0B4;">Cart</span></span>
+</span>
+<p style="margin: 0; color: #A7B2B0; max-width: 26em; line-height: 1.6;">Little luxuries for every room. Thoughtful finds for the home, the desk and the pets you love, shipped from the USA.</p>
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px;">
+<span style="color: #F3EEE6; font-weight: 600;">Need help?</span>
+<span style="color: #A7B2B0;">support@[yourdomain].com · We reply within 24 hours</span>
+</div>
+<div style="display: flex; gap: 10px;">
+<a href="#instagram" aria-label="LuxCart on Instagram" style="width: 40px; height: 40px; border-radius: 999px; border: 1px solid #33403F; color: #F3EEE6; display: grid; place-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"></circle></svg></a>
+<a href="#youtube" aria-label="LuxCart on YouTube" style="width: 40px; height: 40px; border-radius: 999px; border: 1px solid #33403F; color: #F3EEE6; display: grid; place-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"></rect><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor"></path></svg></a>
+<a href="#tiktok" aria-label="LuxCart on TikTok" style="width: 40px; height: 40px; border-radius: 999px; border: 1px solid #33403F; color: #F3EEE6; display: grid; place-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"></path><path d="M14 3c.5 2.5 2.3 4 5 4.3"></path></svg></a>
+<a href="#pinterest" aria-label="LuxCart on Pinterest" style="width: 40px; height: 40px; border-radius: 999px; border: 1px solid #33403F; color: #F3EEE6; display: grid; place-items: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M11 8.5c3-1 5 .5 5 3 0 2.5-1.8 4-3.6 3.5-1-.3-1.4-1.3-1.4-1.3L10 19"></path></svg></a>
+</div>
+</div>
+<nav aria-label="Shop" style="display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #F3EEE6;">Shop</span>
+<a href="#gifts" style="color: #A7B2B0; text-decoration: none;">Holiday Gifts</a>
+<a href="#decor" style="color: #A7B2B0; text-decoration: none;">Home Decor</a>
+<a href="#office" style="color: #A7B2B0; text-decoration: none;">Home Office</a>
+<a href="#pets" style="color: #A7B2B0; text-decoration: none;">Pets</a>
+<a href="#furniture" style="color: #A7B2B0; text-decoration: none;">Furniture</a>
+<a href="#personalized" style="color: #A7B2B0; text-decoration: none;">Personalized</a>
+<a href="#bundles" style="color: #A7B2B0; text-decoration: none;">Gift sets</a>
+</nav>
+<nav aria-label="Help" style="display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #F3EEE6;">Help</span>
+<a href="#track" style="color: #A7B2B0; text-decoration: none;">Track your order</a>
+<a href="#shipping" style="color: #A7B2B0; text-decoration: none;">Shipping</a>
+<a href="#returns" style="color: #A7B2B0; text-decoration: none;">Returns and refunds</a>
+<a href="#faq" style="color: #A7B2B0; text-decoration: none;">FAQ</a>
+<a href="#contact" style="color: #A7B2B0; text-decoration: none;">Contact us</a>
+</nav>
+<nav aria-label="Company" style="display: flex; flex-direction: column; gap: 10px; font-size: 15px;">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #F3EEE6;">Company</span>
+<a href="#story" style="color: #A7B2B0; text-decoration: none;">Our story</a>
+<a href="#finn" style="color: #A7B2B0; text-decoration: none;">Finds by Finn</a>
+<a href="#reviews" style="color: #A7B2B0; text-decoration: none;">Customer reviews</a>
+<a href="#gift-cards" style="color: #A7B2B0; text-decoration: none;">Gift cards</a>
+</nav>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; border-top: 1px solid #33403F;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #33403F; background: transparent; color: #F3EEE6; font: inherit; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>Ships to United States · USD $<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+<span style="font-size: 13px; color: #A7B2B0;">Also shipping to Canada</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px;" aria-label="Accepted payment methods"><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Visa</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Mastercard</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Amex</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">PayPal</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Apple Pay</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Google Pay</span><span style="height: 28px; padding: 0 10px; border-radius: 6px; background: #FFFFFF; color: #1F2A2E; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center;">Shop Pay</span></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: #A7B2B0;">
+<span>© 2026 LuxCart. All rights reserved.</span>
+<span style="display: flex; flex-wrap: wrap; gap: 18px;"><a href="#privacy" style="color: #A7B2B0;">Privacy policy</a><a href="#terms" style="color: #A7B2B0;">Terms of service</a><a href="#refund-policy" style="color: #A7B2B0;">Refund policy</a><a href="#accessibility" style="color: #A7B2B0;">Accessibility</a></span>
+</div>
+</div>
+</footer>
+</div>
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showBar":{"editor":"boolean","default":true},"showReviews":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":5700}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    var self = this;
+    this.timer = setInterval(function () { self.setState({ slide: (((self.state && self.state.slide) || 0) + 1) % 4 }); }, 6000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    var badge = function (kind) {
+      if (kind === 'sale') return { badgeBg: '#F7E3D8', badgeFg: '#A84B26' };
+      if (kind === 'new') return { badgeBg: '#E3EFEC', badgeFg: '#1F5C5A' };
+      return { badgeBg: '#E8DCCB', badgeFg: '#1F2A2E' };
+    };
+    var products = [
+      { name: 'The Barrel Decanter Set', detail: 'Lead-free crystal, 4 glasses, gift box', price: '$59', was: '$79', save: 'Save 25%', badge: 'Sale', kind: 'sale', photo: 'Photo: decanter set', alt: 'Photo placeholder: crystal decanter set' },
+      { name: 'Acacia Charcuterie Set', detail: 'Board, 3 knives and 2 bowls', price: '$49', badge: 'Bestseller', kind: 'best', photo: 'Photo: charcuterie board', alt: 'Photo placeholder: acacia charcuterie board set' },
+      { name: 'Walnut Monitor Riser', detail: 'With a hidden drawer, 24 in wide', price: '$49', badge: 'New', kind: 'new', photo: 'Photo: monitor riser on desk', alt: 'Photo placeholder: walnut monitor riser' },
+      { name: 'Chunky Knit Throw', detail: '50 × 60 in, hand-knit look', swatches: [{ name: 'Oat', hex: '#E8DCCB' }, { name: 'Sage', hex: '#B9C8B4' }, { name: 'Charcoal', hex: '#3A3F42' }], price: '$59', was: '$69', save: 'Save $10', badge: 'Sale', kind: 'sale', photo: 'Photo: knit throw', alt: 'Photo placeholder: chunky knit throw blanket' }
+    ].map(function (p) {
+      var b = badge(p.kind);
+      return Object.assign({}, p, b, { hasBadge: !!p.badge, hasWas: !!p.was });
+    });
+    var self = this;
+    var card = function (list) {
+      return list.map(function (p) {
+        var b = badge(p.kind);
+        var now = parseFloat(String(p.price).slice(1)), was = p.was ? parseFloat(String(p.was).slice(1)) : 0;
+        var pct = was ? '-' + Math.round((was - now) / was * 100) + '%' : '';
+        return Object.assign({}, p, b, { hasBadge: !!p.badge, hasWas: !!p.was, hasPct: !!pct, pct: pct, saveText: was ? 'Save $' + Math.round(was - now) : '', hasSwatches: !!(p.swatches && p.swatches.length), swatches: p.swatches || [], swatchText: p.swatches ? p.swatches.length + ' colors' : '', showTag: !pct && !!p.badge && p.kind !== 'sale', priceColor: pct ? '#A84B26' : '#1F2A2E', photo: p.photo || 'Photo: ' + p.name.toLowerCase(), alt: p.alt || 'Photo placeholder: ' + p.name });
+      });
+    };
+    var slides = [
+      { eyebrow: 'Holiday sale · until Nov 30', title: 'Gifts they will actually keep', sub: '20% off gifts for the home, the host and the pets. Shipped from the USA in 3–7 days.', cta: 'Shop holiday gifts', href: '#gifts', bg: '#1F5C5A', fg: '#FAF7F2', chipBg: '#FAF7F2', chipFg: '#1F5C5A', ctaBg: '#FAF7F2', ctaFg: '#1F5C5A', photoBg: '#E3EFEC', photo: 'Photo: wrapped gifts and decanter set', alt: 'Photo placeholder: holiday gifts on a table' },
+      { eyebrow: 'Bundle and save', title: 'The Host Gift Set', sub: 'Decanter set, whiskey stones and a charcuterie board in one gift box. $119, save $18.', cta: 'Shop the set', href: '#gifts', bg: '#E8DCCB', fg: '#1F2A2E', chipBg: '#FAF7F2', chipFg: '#A84B26', ctaBg: '#1F5C5A', ctaFg: '#FAF7F2', photoBg: '#F3EEE6', photo: 'Photo: host gift set', alt: 'Photo placeholder: host gift set' },
+      { eyebrow: 'Home office', title: 'The desk glow-up kit', sub: 'Desk mat, walnut monitor riser and a cable kit. Three pieces, $89.', cta: 'Upgrade your desk', href: '#office', bg: '#1F2A2E', fg: '#F3EEE6', chipBg: '#6CC0B4', chipFg: '#0F201E', ctaBg: '#FAF7F2', ctaFg: '#1F2A2E', photoBg: '#33403F', photo: 'Photo: clean desk setup', alt: 'Photo placeholder: clean desk setup' },
+      { eyebrow: 'Pets at home', title: 'Comfort for your best friend', sub: 'Orthopedic beds, leather collars and elevated bowls they will love.', cta: 'Shop pets', href: '#pets', bg: '#E3EFEC', fg: '#1F2A2E', chipBg: '#FFFFFF', chipFg: '#1F5C5A', ctaBg: '#1F5C5A', ctaFg: '#FAF7F2', photoBg: '#FAF7F2', photo: 'Photo: dog on an orthopedic bed', alt: 'Photo placeholder: dog on an orthopedic bed' }
+    ];
+    var extra = [
+      { circle: '#2C6E6B', product: 'Barrel Decanter Set', productPrice: '$59', stickerTop: 'Save', stickerBig: '20%' },
+      { circle: '#DCCDB8', product: 'The Host Gift Set', productPrice: '$119', stickerTop: 'Save', stickerBig: '$18' },
+      { circle: '#2A373B', product: 'Desk Glow-Up Kit', productPrice: '$89', stickerTop: '3 for', stickerBig: '$89' },
+      { circle: '#CFE3DE', product: 'Orthopedic Dog Bed', productPrice: '$89', stickerTop: 'From', stickerBig: '$39' }
+    ];
+    slides = slides.map(function (sl, i) { return Object.assign({}, sl, extra[i]); });
+    var newAll = [
+      { name: 'Textured Ceramic Vase Set', detail: 'Set of 3, matte sand glaze', price: '$45', tag: 'decor' },
+      { name: 'Ergonomic Footrest', detail: 'Soft foam, washable cover', price: '$39', tag: 'office' },
+      { name: 'Orthopedic Dog Bed', detail: 'Medium, removable cover', price: '$89', tag: 'pets' },
+      { name: 'Oak Wall Clock', detail: '12 in, silent movement', price: '$49', tag: 'decor' },
+      { name: 'Bouclé Accent Stool', detail: 'Oak legs, 18 in tall', price: '$149', tag: 'furniture' },
+      { name: 'Linen Table Runner', detail: '14 × 90 in, stonewashed', price: '$32', tag: 'decor' },
+      { name: 'Leather Leash Set', detail: 'Collar and 5 ft leash', price: '$36', tag: 'pets' },
+      { name: 'Walnut Pen Tray', detail: 'Solid walnut, felt base', price: '$28', tag: 'office' },
+      { name: 'Rattan Side Table', detail: 'Handwoven, 20 in round', price: '$129', tag: 'furniture' },
+      { name: 'Wool Felt Laptop Sleeve', detail: 'Fits 13–14 in laptops', price: '$42', tag: 'office' }
+    ].map(function (n) { return Object.assign({ badge: 'New', kind: 'new' }, n); });
+    var newTab = (this.state && this.state.newTab) || 'all';
+    var newFiltered = newAll.filter(function (n) { return newTab === 'all' || n.tag === newTab; });
+    var newView = card(newFiltered.slice(0, 5));
+    var newTabs = [['all', 'All'], ['decor', 'Decor'], ['office', 'Office'], ['pets', 'Pets'], ['furniture', 'Furniture']].map(function (t) {
+      var on = newTab === t[0];
+      return { label: t[1], pressed: on ? 'true' : 'false', pick: function () { self.setState({ newTab: t[0] }); }, bg: on ? '#1F2A2E' : 'transparent', fg: on ? '#FAF7F2' : '#1F2A2E', border: on ? '#1F2A2E' : '#D9CDBB' };
+    });
+    var cur = (this.state && this.state.slide) || 0;
+    var go = function (i) { self.setState({ slide: (i + slides.length) % slides.length }); };
+    return {
+      slide: slides[cur],
+      prev: function () { go(cur - 1); },
+      next: function () { go(cur + 1); },
+      dots: slides.map(function (sl, i) {
+        var on = i === cur;
+        return { label: 'Show offer ' + (i + 1) + ': ' + sl.title, pick: function () { go(i); }, w: on ? '28px' : '6px', bg: on ? sl.fg : 'rgba(127,127,127,0.4)' };
+      }),
+      under50: card([
+        { name: 'Whiskey Stones Gift Box', detail: '9 stones, tongs and an ice-ball mold', price: '$29', was: '$39', tag: 'gifts' },
+        { name: 'Cable Management Kit', detail: 'Box, clips and sleeves for one desk', price: '$24', tag: 'desk' },
+        { name: 'Felt Desk Mat', detail: '35 × 16 in, wool felt', swatches: [{ name: 'Charcoal', hex: '#3A3F42' }, { name: 'Oat', hex: '#E8DCCB' }], price: '$34', badge: 'Bestseller', kind: 'best', tag: 'desk' },
+        { name: 'Marble Catch-all Tray', detail: 'White marble, 8 × 5 in', price: '$39', tag: 'decor' },
+        { name: 'Leather Coaster Set', detail: 'Set of 6 with holder', price: '$22', was: '$28', tag: 'gifts' }
+      ].filter(function (d) { var f = (self.state && self.state.dealFilter) || 'all'; return f === 'all' || d.tag === f; })),
+      dealFilters: [['all', 'All deals'], ['gifts', 'Gifts'], ['desk', 'Desk'], ['decor', 'Decor']].map(function (f) {
+        var on = ((self.state && self.state.dealFilter) || 'all') === f[0];
+        return { label: f[1], pressed: on ? 'true' : 'false', pick: function () { self.setState({ dealFilter: f[0] }); }, bg: on ? '#1F2A2E' : 'transparent', fg: on ? '#FAF7F2' : '#1F2A2E', border: on ? '#1F2A2E' : '#D9CDBB' };
+      }),
+      newInView: newView,
+      newTabs: newTabs,
+      mailDone: !!(this.state && this.state.mailDone),
+      mailOpen: !(this.state && this.state.mailDone),
+      mailError: !!(this.state && this.state.mailError),
+      mailBorder: (this.state && this.state.mailError) ? '#A33A1F' : '#C9BBA6',
+      onEmail: function (e) { self.mailValue = e.target.value; if (self.state && self.state.mailError) self.setState({ mailError: false }); },
+      onJoin: function () { var v = (self.mailValue || '').trim(); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { self.setState({ mailError: true }); return; } self.setState({ mailDone: true, mailError: false }); },
+      showReviews: this.props.showReviews ?? true,
+      revBars: [
+        { label: '5★', w: '[80%]' },
+        { label: '4★', w: '[14%]' },
+        { label: '3★', w: '[4%]' },
+        { label: '2★', w: '[1%]' },
+        { label: '1★', w: '[1%]' }
+      ].map(function (b, i) { return { label: b.label, w: ['80%', '14%', '4%', '1%', '1%'][i] }; }),
+      revCards: [
+        { isVideo: true, isPhoto: false, duration: '0:38', title: '[Review headline]', text: '[Customer review text goes here. Two to four lines about the product, delivery and how it looks at home.]', product: 'Barrel Decanter Set', bg: '#E3EFEC' },
+        { isVideo: false, isPhoto: true, title: '[Review headline]', text: '[Customer review text goes here. Two to four lines about the product, delivery and how it looks at home.]', product: 'Walnut Monitor Riser', bg: '#EFE6D8' },
+        { isVideo: false, isPhoto: false, title: '[Review headline]', text: '[Customer review text goes here. Two to four lines about the product, delivery and how it looks at home.]', product: 'Orthopedic Dog Bed', bg: '#F7E3D8' }
+      ],
+      showBar: this.props.showBar ?? true,
+      categories: [
+        { name: 'Holiday Gifts', href: '#gifts', hot: true },
+        { name: 'Home Decor', href: '#decor' },
+        { name: 'Home Office', href: '#office' },
+        { name: 'Pets', href: '#pets' },
+        { name: 'Furniture', href: '#furniture' },
+        { name: 'Personalized', href: '#personalized' },
+        { name: 'Kitchen and Bar', href: '#bar' },
+        { name: 'Bundles', href: '#bundles' },
+        { name: 'Under $50', href: '#under-50' },
+        { name: 'New In', href: '#new' }
+      ].map(function (c) {
+        return Object.assign({ hot: false }, c, c.hot ? { bg: '#F7E3D8', fg: '#A84B26', weight: 600 } : { bg: 'transparent', fg: '#1F2A2E', weight: 500 });
+      }),
+      collections: [
+        { name: 'Home Decor and Gifts', href: '#decor', bg: '#E8DCCB', photo: 'Photo: styled shelf', alt: 'Photo placeholder: styled living room shelf' },
+        { name: 'Home Office', href: '#office', bg: '#D9E2E0', photo: 'Photo: desk setup', alt: 'Photo placeholder: clean desk setup' },
+        { name: 'Pets at Home', href: '#pets', bg: '#E3EFEC', photo: 'Photo: dog on bed', alt: 'Photo placeholder: dog on an orthopedic bed' },
+        { name: 'Furniture', href: '#furniture', bg: '#EFE6D8', photo: 'Photo: accent chair', alt: 'Photo placeholder: accent chair in a living room' },
+        { name: 'Personalized', href: '#personalized', bg: '#F7E3D8', photo: 'Photo: custom pet portrait', alt: 'Photo placeholder: custom pet portrait print' }
+      ],
+      products: card(products.concat([{ name: 'Textured Ceramic Vase Set', detail: 'Set of 3, matte sand glaze', price: '$45', was: '$55', badge: 'Sale', kind: 'sale' }])),
+      reels: [
+        { title: 'Desk glow-up under $100', duration: '0:24', product: 'Walnut Monitor Riser', price: '$49', bg: '#D9E2E0' },
+        { title: 'Gifts for the host who has everything', duration: '0:31', product: 'Barrel Decanter Set', price: '$59', bg: '#E3EFEC' },
+        { title: '5 finds that make a home feel cozy', duration: '0:28', product: 'Chunky Knit Throw', price: '$59', bg: '#EFE6D8' },
+        { title: 'What my dog thinks of his new bed', duration: '0:19', product: 'Orthopedic Dog Bed', price: '$89', bg: '#F7E3D8' },
+        { title: 'Hide every cable in 60 seconds', duration: '0:42', product: 'Cable Management Kit', price: '$24', bg: '#E4E9EC' }
+      ],
+      reviewSlots: [{ id: 1 }, { id: 2 }, { id: 3 }]
+    };
+  }
+}
+</script>
+</body>
+</html>
