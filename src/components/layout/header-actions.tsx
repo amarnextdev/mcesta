@@ -10,9 +10,10 @@ const iconLink =
 export function HeaderActions() {
   return (
     <div className="flex items-center gap-1">
-      <AccountLink className={iconLink} />
       <WishlistLink className={`${iconLink} hidden sm:grid`} />
       <CartLink className={iconLink} />
+      <span aria-hidden="true" className="mx-1 hidden h-6 w-px bg-line sm:block" />
+      <AccountLink />
     </div>
   )
 }
