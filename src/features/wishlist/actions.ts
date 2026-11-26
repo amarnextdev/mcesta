@@ -24,10 +24,20 @@ export async function getWishlistAction(): Promise<WishItem[]> {
 
 /** Throws on failure so the client can roll back its optimistic update. */
 export async function addWishlistAction(input: z.input<typeof addInput>): Promise<void> {
-  const parsed = addInput.parse(input)
-  await addToWishlist(parsed)
+  try {
+    await addToWishlist(addInput.parse(input))
+  } catch (error) {
+    // Shows in the server / Vercel logs; the browser only gets a generic failure.
+    console.error("[wishlist] add", error)
+    throw error
+  }
 }
 
 export async function removeWishlistAction(id: string): Promise<void> {
-  await removeFromWishlist(productId.parse(id))
+  try {
+    await removeFromWishlist(productId.parse(id))
+  } catch (error) {
+    console.error("[wishlist] remove", error)
+    throw error
+  }
 }

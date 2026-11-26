@@ -13,15 +13,16 @@ export function WishlistButton({ product, className }: { product: ProductCard; c
   const saved = items.some((i) => i.handle === product.handle)
 
   function toggle() {
+    // The heart flips straight away; the toast waits for the server, so "Saved" is never a lie.
     if (saved) {
-      remove(product.handle)
-      toast(`Removed from wishlist`, { description: product.title })
+      remove(product.handle, () => toast(`Removed from wishlist`, { description: product.title }))
     } else {
-      add({ ...product, savedAt: new Date().toISOString(), savedPrice: product.price })
-      toast.success("Saved to wishlist", {
-        description: product.title,
-        action: { label: "View", onClick: () => window.location.assign("/account/wishlist") },
-      })
+      add({ ...product, savedAt: new Date().toISOString(), savedPrice: product.price }, () =>
+        toast.success("Saved to wishlist", {
+          description: product.title,
+          action: { label: "View", onClick: () => window.location.assign("/account/wishlist") },
+        })
+      )
     }
   }
 

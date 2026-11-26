@@ -54,11 +54,12 @@ export function useWishlist() {
     items,
     /** False until the wishlist has loaded (show a skeleton instead of "empty"). */
     ready: !isPending,
-    add: (item: WishItem) => addMutation.mutate(item),
+    /** `onSaved` runs once the server has really saved it (for the "Saved" toast). */
+    add: (item: WishItem, onSaved?: () => void) => addMutation.mutate(item, { onSuccess: onSaved }),
     /** Remove by product handle (what the cards know). */
-    remove: (handle: string) => {
+    remove: (handle: string, onRemoved?: () => void) => {
       const item = items.find((i) => i.handle === handle)
-      if (item) removeMutation.mutate(item.id)
+      if (item) removeMutation.mutate(item.id, { onSuccess: onRemoved })
     },
   }
 }
