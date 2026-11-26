@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 
-import { completeLogin } from "@/features/account/customer-auth.server"
+import { completeLogin, LoginError } from "@/features/account/customer-auth.server"
 
 /** Shopify sends the shopper back here after login (register this URL in Shopify admin). */
 export async function GET(request: NextRequest) {
@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL(returnTo, request.url))
   } catch (error) {
     console.error("[account] login callback", error)
-    return NextResponse.redirect(new URL("/account/login?error=1", request.url))
+    const reason = error instanceof LoginError ? error.reason : "unknown"
+    return NextResponse.redirect(new URL(`/account/login?error=${reason}`, request.url))
   }
 }

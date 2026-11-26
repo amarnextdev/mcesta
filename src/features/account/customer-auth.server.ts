@@ -51,8 +51,14 @@ function discover(): Promise<Endpoints> {
 
 const base64url = (buf: Buffer) => buf.toString("base64url")
 
-/** This site's origin as the shopper sees it (works behind tunnels and on Vercel). */
+/**
+ * This site's origin, used for the login redirect URLs (they must match Shopify's settings exactly).
+ * NEXT_PUBLIC_SITE_URL wins when set (production: one fixed URL, whatever Vercel URL was used);
+ * otherwise the request's host (local tunnels).
+ */
 export async function siteOrigin() {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "")
+  if (configured && !configured.includes("localhost")) return configured
   const h = await headers()
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000"
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https")
@@ -70,6 +76,16 @@ const cookieOptions = (maxAge: number) => ({
 /** Only same-site paths after login (no open redirects). */
 export function safeReturnTo(value: string | null | undefined) {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : "/account/orders"
+}
+
+/** Login failure with a short reason code (shown on the login page to help debugging). */
+export class LoginError extends Error {
+  constructor(
+    readonly reason: "shopify" | "cookie" | "state" | "token",
+    message: string
+  ) {
+    super(message)
+  }
 }
 
 // ---- Session ----
@@ -103,10 +119,14 @@ async function tokenRequest(body: Record<string, string>): Promise<TokenResponse
   const { token } = await discover()
   const res = await fetch(token, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", Origin: await siteOrigin() },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Origin: await siteOrigin(),
+      "User-Agent": "Mcesta storefront",
+    },
     body: new URLSearchParams({ client_id: CLIENT_ID, ...body }),
   })
-  if (!res.ok) throw new Error(`Customer token request failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw new LoginError("token", `Token request failed: ${res.status} ${await res.text()}`)
   return res.json()
 }
 
@@ -165,7 +185,9 @@ export async function completeLogin(params: URLSearchParams): Promise<string> {
   jar.delete(FLOW_COOKIE)
   const flow = raw ? (JSON.parse(raw) as Flow) : null
   const code = params.get("code")
-  if (!flow || !code || params.get("state") !== flow.state) throw new Error("Login session expired or state mismatch")
+  if (params.get("error")) throw new LoginError("shopify", `${params.get("error")}: ${params.get("error_description") ?? ""}`)
+  if (!flow) throw new LoginError("cookie", "Login cookie missing (blocked, expired, or a different domain)")
+  if (!code || params.get("state") !== flow.state) throw new LoginError("state", "State mismatch or no code")
 
   const t = await tokenRequest({
     grant_type: "authorization_code",

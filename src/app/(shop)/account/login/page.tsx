@@ -50,7 +50,7 @@ async function LoginContent({ searchParams }: Pick<Props, "searchParams">) {
           <h1 className="text-[1.625rem] leading-tight">{failed ? "We couldn't log you in" : "Log in or sign up"}</h1>
           <p className="text-[0.9375rem] leading-relaxed text-slate">
             {failed
-              ? "The code expired or something went wrong on the way back. Please try again."
+              ? `The code expired or something went wrong on the way back. Please try again.${typeof params.error === "string" && params.error !== "1" ? ` (${params.error})` : ""}`
               : "Enter your email and we'll send you a 6-digit code. No password needed, and a new email creates your account."}
           </p>
         </div>
