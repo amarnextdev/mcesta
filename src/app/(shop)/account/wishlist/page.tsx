@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { connection } from "next/server"
 import { Suspense } from "react"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { CloudIcon } from "lucide-react"
@@ -22,6 +23,8 @@ export const metadata: Metadata = { title: "Wishlist", robots: { index: false } 
 async function WishlistContent() {
   // Load the wishlist on the server too, so the first render already shows it and matches the
   // browser (no skeleton on one side and the list on the other = no hydration mismatch).
+  // Per-shopper page: render on request, never at build (TanStack stamps Date.now() in prefetch).
+  await connection()
   const queryClient = makeQueryClient()
   const [customer] = await Promise.all([
     getCustomer(),
