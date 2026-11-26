@@ -12,6 +12,7 @@ import { ReviewsSection } from "@/features/product/components/detail/reviews-sec
 import { ProductRecommendations } from "@/features/product/components/detail/product-recommendations"
 import { RecordView } from "@/features/product/components/record-view"
 import { RecentlyViewedSection } from "@/features/product/components/recently-viewed-section"
+import { getCustomerIdentity, publicName } from "@/features/account/session.server"
 import { getAnsweredQuestions, getProductReviews } from "@/features/reviews/reviews.server"
 import { defaultVariant, productToCard } from "@/features/product/variants"
 import { storeFaq } from "@/lib/config/faq"
@@ -99,11 +100,14 @@ async function ProductContent({ params }: Pick<Props, "params">) {
   const product = await getProduct(handle, country)
   if (!product) notFound()
 
-  const [departments, reviews, answered] = await Promise.all([
+  const [departments, reviews, answered, shopper] = await Promise.all([
     getDepartments(),
     getProductReviews(product.id),
     getAnsweredQuestions(product.id),
+    getCustomerIdentity(),
   ])
+  // Reviews and questions need an account (like Amazon / Flipkart); null shows "Log in to …".
+  const viewer = shopper ? { name: publicName(shopper), email: shopper.email } : null
   const place = placeOf(product, departments)
   // Supabase reviews decide the rating; fall back to a review-app metafield if there is one.
   const rating = reviews.stats ? { value: reviews.stats.average, count: reviews.stats.count } : product.rating
@@ -150,10 +154,11 @@ async function ProductContent({ params }: Pick<Props, "params">) {
           seeAll={category ? { label: `See all ${category.label}`, href: category.href } : undefined}
         />
       </Suspense>
-      <ReviewsSection productId={product.id} productHandle={product.handle} productTitle={product.title} data={reviews} />
+      <ReviewsSection productId={product.id} productHandle={product.handle} productTitle={product.title} data={reviews} viewer={viewer} />
       <ProductFaq
         productId={product.id}
         productHandle={product.handle}
+        viewer={viewer}
         items={[...answered.map((q) => ({ q: q.question, a: q.answer })), ...product.faq, ...storeFaq]}
       />
       <RecentlyViewedSection exclude={[product.handle]} className="pb-16" />

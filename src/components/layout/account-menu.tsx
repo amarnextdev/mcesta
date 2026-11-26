@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { HeartIcon, LogOutIcon, PackageIcon, UserRoundIcon } from "lucide-react"
+import { HeartIcon, LogOutIcon, PackageIcon, SettingsIcon, UserRoundIcon } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -50,6 +50,12 @@ export function AccountMenu({ firstName, email }: Props) {
           <Link href="/account/wishlist">
             <HeartIcon aria-hidden="true" className="size-4 text-teal" />
             Wishlist
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className={item}>
+          <Link href="/account/settings">
+            <SettingsIcon aria-hidden="true" className="size-4 text-teal" />
+            Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

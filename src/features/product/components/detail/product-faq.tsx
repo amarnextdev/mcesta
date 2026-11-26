@@ -18,10 +18,13 @@ export function ProductFaq({
   productId,
   productHandle,
   items,
+  viewer,
 }: {
   productId: string
   productHandle: string
   items: { q: string; a: string }[]
+  /** Logged-in shopper (questions need an account), or null. */
+  viewer: { name: string; email: string } | null
 }) {
   const [open, setOpen] = useState<Set<number>>(new Set([0]))
   const [showAll, setShowAll] = useState(false)
@@ -55,13 +58,22 @@ export function ProductFaq({
               <span className="text-sm font-semibold">Question sent. We&apos;ll email you the answer.</span>
             </div>
           ) : (
-            <Button aria-expanded={asking} onClick={() => setAsking(!asking)} className="h-12 rounded-xl text-[0.9375rem]">
-              <MessageCircleQuestionIcon data-icon="inline-start" className="size-5" />
-              {asking ? "Close" : "Ask a question"}
-            </Button>
+            viewer ? (
+              <Button aria-expanded={asking} onClick={() => setAsking(!asking)} className="h-12 rounded-xl text-[0.9375rem]">
+                <MessageCircleQuestionIcon data-icon="inline-start" className="size-5" />
+                {asking ? "Close" : "Ask a question"}
+              </Button>
+            ) : (
+              <Button asChild className="h-12 rounded-xl text-[0.9375rem]">
+                <a href={`/account/login?returnTo=${encodeURIComponent(`/products/${productHandle}`)}`}>
+                  <MessageCircleQuestionIcon data-icon="inline-start" className="size-5" />
+                  Log in to ask a question
+                </a>
+              </Button>
+            )
           )}
 
-          {asking && !sent && (
+          {asking && !sent && viewer && (
             <form action={action} className="flex flex-col gap-2.5 rounded-[14px] border-[1.5px] border-teal bg-white p-4">
               <input type="hidden" name="productId" value={productId} />
               <input type="hidden" name="productHandle" value={productHandle} />
@@ -69,9 +81,9 @@ export function ProductFaq({
               <FormField label="Your question" error={errors.question}>
                 {(p) => <textarea {...p} name="question" rows={3} placeholder="e.g. What are the dimensions?" className={cn(inputClass, "resize-y")} />}
               </FormField>
-              <FormField label="Email for the answer" error={errors.email}>
-                {(p) => <input {...p} name="email" type="email" autoComplete="email" placeholder="you@example.com" className={inputClass} />}
-              </FormField>
+              <p className="text-[0.8125rem] text-slate">
+                We&apos;ll email the answer to <span className="font-semibold text-ink">{viewer.email}</span>.
+              </p>
               {state.status === "error" && !state.fields && (
                 <p role="alert" className="rounded-lg bg-terra-soft px-3 py-2 text-[0.8125rem] font-semibold text-terra-text">
                   {state.message}

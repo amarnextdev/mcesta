@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { HeartIcon, LogOutIcon, MapPinIcon, PackageIcon, UserRoundIcon } from "lucide-react"
+import { HeartIcon, LogOutIcon, PackageIcon, SettingsIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -8,8 +8,7 @@ import type { Customer } from "../types"
 const links = [
   { href: "/account/orders", label: "My orders", icon: PackageIcon },
   { href: "/account/wishlist", label: "Wishlist", icon: HeartIcon },
-  { href: "/account/addresses", label: "Addresses", icon: MapPinIcon },
-  { href: "/account/details", label: "Account details", icon: UserRoundIcon },
+  { href: "/account/settings", label: "Settings", icon: SettingsIcon },
 ]
 
 /** Left column of the account pages: greeting with order counts, then the account menu. */
@@ -55,10 +54,11 @@ export function AccountSidebar({
             </Link>
           )
         })}
-        <Link href="/account/logout" prefetch={false} className="flex h-[2.875rem] items-center gap-3 rounded-xl px-3.5 text-[0.9375rem] text-slate hover:bg-sand hover:text-ink">
+        {/* Full page load: signing out also ends the Shopify session. */}
+        <a href="/account/logout" className="flex h-[2.875rem] items-center gap-3 rounded-xl px-3.5 text-[0.9375rem] text-slate hover:bg-sand hover:text-ink">
           <LogOutIcon aria-hidden="true" className="size-[18px]" />
           Sign out
-        </Link>
+        </a>
       </nav>
     </aside>
   )

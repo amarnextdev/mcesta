@@ -8,14 +8,17 @@ import type { ProductReviews, Review } from "@/features/reviews/types"
 import { cn } from "@/lib/utils"
 
 import { submitReview } from "../../actions"
-import { idleState } from "../../feedback"
+import { idleState, type FormState } from "../../feedback"
 import { FormField, Honeypot, inputClass } from "./form-field"
+import { ReviewPhotoPicker, ReviewPhotoStrip, uploadReviewPhotos } from "./review-photos"
 
 type ReviewsSectionProps = {
   productId: string
   productHandle: string
   productTitle: string
   data: ProductReviews
+  /** Logged-in shopper (reviews need an account), or null. */
+  viewer: { name: string } | null
 }
 
 // Fixed locale and time zone so the server and the browser print the same date (no hydration mismatch).
@@ -29,6 +32,7 @@ function ReviewCard({ review }: { review: Review }) {
         {review.title && <h3 className="text-[0.9375rem] font-bold">{review.title}</h3>}
       </div>
       <p className="text-[0.9375rem] leading-relaxed whitespace-pre-line text-ink/90">{review.body}</p>
+      <ReviewPhotoStrip photos={review.photos} author={review.authorName} />
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-slate">
         <span className="font-semibold text-ink">{review.authorName}</span>
         {review.verifiedBuyer && (
@@ -59,12 +63,21 @@ function Stars({ value, className }: { value: number; className?: string }) {
  * or an honest "No reviews yet". The form validates on the server; reviews are checked before
  * they appear. Individual reviews will come from the review app once it's connected.
  */
-export function ReviewsSection({ productId, productHandle, productTitle, data }: ReviewsSectionProps) {
+export function ReviewsSection({ productId, productHandle, productTitle, data, viewer }: ReviewsSectionProps) {
   const { stats, reviews } = data
   const rating = stats ? { value: stats.average, count: stats.count } : null
   const [writing, setWriting] = useState(false)
   const [stars, setStars] = useState(0)
-  const [state, action, pending] = useActionState(submitReview, idleState)
+  const [photos, setPhotos] = useState<File[]>([])
+  // Photos go straight to storage first; the review then carries their paths.
+  const [state, action, pending] = useActionState(async (prev: FormState, formData: FormData): Promise<FormState> => {
+    const uploaded = await uploadReviewPhotos(photos)
+    if ("error" in uploaded) return { status: "error", message: uploaded.error }
+    uploaded.paths.forEach((path) => formData.append("photos", path))
+    return submitReview(prev, formData)
+  }, idleState)
+  const loginHref = `/account/login?returnTo=${encodeURIComponent(`/products/${productHandle}#reviews`)}`
+  const startWriting = () => setWriting(true)
   const errors = state.status === "error" ? (state.fields ?? {}) : {}
   const done = state.status === "success"
 
@@ -104,16 +117,21 @@ export function ReviewsSection({ productId, productHandle, productTitle, data }:
           <div className="mt-2 flex flex-col gap-2 border-t border-line pt-4">
             <span className="text-base font-bold">Own this product?</span>
             <span className="text-sm text-slate">Share your thoughts to help other shoppers decide.</span>
-            {!done && (
-              <Button
-                variant="outline"
-                aria-expanded={writing}
-                onClick={() => setWriting(!writing)}
-                className="mt-1 h-[2.875rem] border-[1.5px] border-ink bg-white text-[0.9375rem]"
-              >
-                {writing ? "Close" : "Write a review"}
-              </Button>
-            )}
+            {!done &&
+              (viewer ? (
+                <Button
+                  variant="outline"
+                  aria-expanded={writing}
+                  onClick={() => setWriting(!writing)}
+                  className="mt-1 h-[2.875rem] border-[1.5px] border-ink bg-white text-[0.9375rem]"
+                >
+                  {writing ? "Close" : "Write a review"}
+                </Button>
+              ) : (
+                <Button asChild variant="outline" className="mt-1 h-[2.875rem] border-[1.5px] border-ink bg-white text-[0.9375rem]">
+                  <a href={loginHref}>Log in to write a review</a>
+                </Button>
+              ))}
           </div>
         </div>
 
@@ -173,14 +191,13 @@ export function ReviewsSection({ productId, productHandle, productTitle, data }:
                   />
                 )}
               </FormField>
-              <div className="grid gap-3.5 sm:grid-cols-2">
-                <FormField label="Name (shown with your review)" error={errors.name}>
-                  {(p) => <input {...p} name="name" autoComplete="given-name" className={inputClass} />}
-                </FormField>
-                <FormField label="Email (never shown)" error={errors.email}>
-                  {(p) => <input {...p} name="email" type="email" autoComplete="email" className={inputClass} />}
-                </FormField>
-              </div>
+              <ReviewPhotoPicker files={photos} onChange={setPhotos} />
+              {viewer && (
+                <p className="text-[0.8125rem] text-slate">
+                  Posting as <span className="font-semibold text-ink">{viewer.name}</span>. Bought it here? Your review gets a
+                  Verified buyer badge.
+                </p>
+              )}
 
               {state.status === "error" && !state.fields && (
                 <p role="alert" className="rounded-lg bg-terra-soft px-3 py-2 text-[0.8125rem] font-semibold text-terra-text">
@@ -192,7 +209,7 @@ export function ReviewsSection({ productId, productHandle, productTitle, data }:
                   Cancel
                 </Button>
                 <Button type="submit" disabled={pending} className="h-11 px-[22px] font-bold">
-                  {pending ? "Sending…" : "Submit review"}
+                  {pending ? (photos.length ? "Uploading photos…" : "Sending…") : "Submit review"}
                 </Button>
               </div>
             </form>
@@ -209,9 +226,15 @@ export function ReviewsSection({ productId, productHandle, productTitle, data }:
               </span>
               <p className="font-heading text-[1.25rem] leading-tight">No reviews yet</p>
               <p className="max-w-sm text-[0.9375rem] text-slate">Bought this? Be the first to tell other shoppers what you think.</p>
-              <Button onClick={() => setWriting(true)} className="mt-1 h-11 px-5">
-                Write the first review
-              </Button>
+              {viewer ? (
+                <Button onClick={startWriting} className="mt-1 h-11 px-5">
+                  Write the first review
+                </Button>
+              ) : (
+                <Button asChild className="mt-1 h-11 px-5">
+                  <a href={loginHref}>Log in to write the first review</a>
+                </Button>
+              )}
             </div>
           )}
         </div>

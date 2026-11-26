@@ -2,6 +2,7 @@ import "server-only"
 
 import { cacheLife, cacheTag } from "next/cache"
 
+import { serverEnv } from "@/lib/config/env.server"
 import { supabaseAdmin, supabaseConfigured } from "@/lib/supabase/admin"
 import type { Tables } from "@/lib/supabase/database.types"
 
@@ -17,6 +18,13 @@ type ReviewRow = Pick<
   "id" | "rating" | "title" | "body" | "author_name" | "verified_buyer" | "photos" | "created_at"
 >
 
+export const REVIEW_MEDIA_BUCKET = "review-media"
+
+/** Public URL of a stored review photo (bucket is public-read; files have random names). */
+function mediaUrl(path: string) {
+  return `${serverEnv.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${REVIEW_MEDIA_BUCKET}/${path}`
+}
+
 const toReview = (r: ReviewRow): Review => ({
   id: r.id,
   rating: r.rating,
@@ -24,7 +32,7 @@ const toReview = (r: ReviewRow): Review => ({
   body: r.body,
   authorName: r.author_name,
   verifiedBuyer: r.verified_buyer,
-  photos: r.photos,
+  photos: r.photos.map(mediaUrl),
   createdAt: r.created_at,
 })
 
@@ -95,21 +103,23 @@ type NewReview = {
   rating: number
   title: string
   body: string
-  name: string
+  customerId: string
+  authorName: string
   email: string
+  verifiedBuyer: boolean
+  /** Storage paths from createPhotoUploads, already checked to belong to this shopper. */
+  photos: string[]
 }
 
-/** Saves a review as pending. Returns false if this email already reviewed the product. */
+/** Saves a review as pending. One review per shopper per product. */
 export async function createReview(input: NewReview): Promise<"created" | "duplicate"> {
   const db = supabaseAdmin()
-  const email = input.email.toLowerCase()
 
-  // One review per email per product.
   const { count, error: countError } = await db
     .from("reviews")
     .select("id", { count: "exact", head: true })
     .eq("product_id", input.productId)
-    .eq("author_email", email)
+    .eq("customer_id", input.customerId)
   if (countError) throw new Error(countError.message)
   if ((count ?? 0) > 0) return "duplicate"
 
@@ -119,14 +129,19 @@ export async function createReview(input: NewReview): Promise<"created" | "dupli
     rating: input.rating,
     title: input.title,
     body: input.body,
-    author_name: input.name,
-    author_email: email,
+    author_name: input.authorName,
+    author_email: input.email.toLowerCase(),
+    customer_id: input.customerId,
+    verified_buyer: input.verifiedBuyer,
+    photos: input.photos,
   })
+  // Unique index: two submits racing each other.
+  if (error?.code === "23505") return "duplicate"
   if (error) throw new Error(error.message)
   return "created"
 }
 
-type NewQuestion = { productId: string; productHandle: string; question: string; email: string }
+type NewQuestion = { productId: string; productHandle: string; question: string; customerId: string; authorName: string; email: string }
 
 /** Saves a question as pending; the team answers it in the dashboard. */
 export async function createQuestion(input: NewQuestion): Promise<void> {
@@ -134,8 +149,51 @@ export async function createQuestion(input: NewQuestion): Promise<void> {
     product_id: input.productId,
     product_handle: input.productHandle,
     question: input.question,
-    author_name: "Shopper",
+    customer_id: input.customerId,
+    author_name: input.authorName,
     author_email: input.email.toLowerCase(),
   })
   if (error) throw new Error(error.message)
+}
+
+// ---- Review photos ----
+
+/** Folder of one shopper's uploads: reviews/<numeric customer id>/… */
+export function photoFolder(customerId: string) {
+  return `reviews/${customerId.split("/").pop()}`
+}
+
+const EXTENSIONS: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/heic": "heic",
+  "image/heif": "heif",
+}
+
+/**
+ * One signed upload URL per photo: the browser sends the file straight to Supabase Storage
+ * (not through our server, which keeps big uploads off Vercel's request limit).
+ */
+export async function createPhotoUploads(customerId: string, types: string[]) {
+  const bucket = supabaseAdmin().storage.from(REVIEW_MEDIA_BUCKET)
+  return Promise.all(
+    types.map(async (type) => {
+      const path = `${photoFolder(customerId)}/${crypto.randomUUID()}.${EXTENSIONS[type]}`
+      const { data, error } = await bucket.createSignedUploadUrl(path)
+      if (error) throw new Error(error.message)
+      return { path, url: data.signedUrl }
+    })
+  )
+}
+
+/** Keeps only paths in this shopper's folder that were really uploaded. */
+export async function ownedPhotos(customerId: string, paths: string[]): Promise<string[]> {
+  const folder = photoFolder(customerId)
+  const mine = paths.filter((p) => p.startsWith(`${folder}/`) && /^[\w/-]+\.(jpg|png|webp|heic|heif)$/.test(p))
+  if (mine.length === 0) return []
+  const { data, error } = await supabaseAdmin().storage.from(REVIEW_MEDIA_BUCKET).list(folder, { limit: 100 })
+  if (error) throw new Error(error.message)
+  const existing = new Set((data ?? []).map((f) => `${folder}/${f.name}`))
+  return mine.filter((p) => existing.has(p))
 }

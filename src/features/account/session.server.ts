@@ -228,3 +228,105 @@ export async function getOrder(id: string): Promise<Order | null> {
   if (!data?.order) return null
   return toOrder(data.order, await variantHandles([data.order]))
 }
+
+export type Profile = {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string | null
+  addresses: { id: string; lines: string[]; isDefault: boolean }[]
+}
+
+/** Profile + saved addresses for the settings page. null = not logged in. */
+export async function getProfile(): Promise<Profile | null> {
+  if (!customerLoginConfigured) return null
+  type Raw = {
+    customer: {
+      firstName: string | null
+      lastName: string | null
+      emailAddress: { emailAddress: string } | null
+      phoneNumber: { phoneNumber: string } | null
+      defaultAddress: { id: string } | null
+      addresses: { nodes: { id: string; formatted: string[] }[] }
+    }
+  }
+  const data = await customerFetch<Raw>(/* GraphQL */ `
+    query Profile {
+      customer {
+        firstName
+        lastName
+        emailAddress { emailAddress }
+        phoneNumber { phoneNumber }
+        defaultAddress { id }
+        addresses(first: 10) { nodes { id formatted(withName: true) } }
+      }
+    }
+  `)
+  if (!data) return null
+  const c = data.customer
+  return {
+    firstName: c.firstName ?? "",
+    lastName: c.lastName ?? "",
+    email: c.emailAddress?.emailAddress ?? "",
+    phone: c.phoneNumber?.phoneNumber ?? null,
+    addresses: c.addresses.nodes.map((a) => ({ id: a.id, lines: a.formatted, isDefault: a.id === c.defaultAddress?.id })),
+  }
+}
+
+/** Change the shopper's name. Returns an error message, or null when saved. */
+export async function updateName(firstName: string, lastName: string): Promise<string | null> {
+  const data = await customerFetch<{ customerUpdate: { userErrors: { message: string }[] } }>(
+    /* GraphQL */ `
+      mutation UpdateName($input: CustomerUpdateInput!) {
+        customerUpdate(input: $input) {
+          userErrors { message }
+        }
+      }
+    `,
+    { input: { firstName, lastName } }
+  )
+  if (!data) return "Please log in again."
+  return data.customerUpdate.userErrors[0]?.message ?? null
+}
+
+export type CustomerIdentity = { id: string; firstName: string; lastName: string; email: string }
+
+/** Who is logged in (for reviews and questions). null = not logged in. */
+export async function getCustomerIdentity(): Promise<CustomerIdentity | null> {
+  if (!customerLoginConfigured) return null
+  try {
+    const data = await customerFetch<{
+      customer: { id: string; firstName: string | null; lastName: string | null; emailAddress: { emailAddress: string } | null }
+    }>(`query Identity { customer { id firstName lastName emailAddress { emailAddress } } }`)
+    if (!data) return null
+    const c = data.customer
+    return { id: c.id, firstName: c.firstName ?? "", lastName: c.lastName ?? "", email: c.emailAddress?.emailAddress ?? "" }
+  } catch (error) {
+    console.error("[account] identity", error)
+    return null
+  }
+}
+
+/** Has the logged-in shopper ordered any of these variants? (For the "Verified buyer" badge.) */
+export async function hasOrderedAny(variantIds: string[]): Promise<boolean> {
+  if (!customerLoginConfigured || variantIds.length === 0) return false
+  try {
+    const data = await customerFetch<{ customer: { orders: { nodes: { cancelledAt: string | null; lineItems: { nodes: { variantId: string | null }[] } }[] } } }>(
+      `query Bought { customer { orders(first: 50, sortKey: PROCESSED_AT, reverse: true) { nodes { cancelledAt lineItems(first: 50) { nodes { variantId } } } } } }`
+    )
+    const wanted = new Set(variantIds)
+    return Boolean(
+      data?.customer.orders.nodes.some((o) => !o.cancelledAt && o.lineItems.nodes.some((l) => l.variantId && wanted.has(l.variantId)))
+    )
+  } catch (error) {
+    console.error("[account] purchase check", error)
+    return false
+  }
+}
+
+/** "Amarjeet S." – how a shopper's name shows on reviews. */
+export function publicName(identity: Pick<CustomerIdentity, "firstName" | "lastName" | "email">) {
+  const first = identity.firstName.trim() || identity.email.split("@")[0] || "Shopper"
+  const last = identity.lastName.trim()
+  return last ? `${first} ${last[0].toUpperCase()}.` : first
+}

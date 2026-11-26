@@ -27,6 +27,7 @@ export type Database = {
           author_email: string
           author_name: string
           created_at: string
+          customer_id: string | null
           id: string
           product_handle: string
           product_id: string
@@ -39,6 +40,7 @@ export type Database = {
           author_email: string
           author_name: string
           created_at?: string
+          customer_id?: string | null
           id?: string
           product_handle: string
           product_id: string
@@ -51,6 +53,7 @@ export type Database = {
           author_email?: string
           author_name?: string
           created_at?: string
+          customer_id?: string | null
           id?: string
           product_handle?: string
           product_id?: string
@@ -75,6 +78,7 @@ export type Database = {
           status: Database["public"]["Enums"]["moderation_status"]
           title: string | null
           verified_buyer: boolean
+          videos: string[]
         }
         Insert: {
           author_email: string
@@ -91,6 +95,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["moderation_status"]
           title?: string | null
           verified_buyer?: boolean
+          videos?: string[]
         }
         Update: {
           author_email?: string
@@ -107,6 +112,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["moderation_status"]
           title?: string | null
           verified_buyer?: boolean
+          videos?: string[]
         }
         Relationships: []
       }

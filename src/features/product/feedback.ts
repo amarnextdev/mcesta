@@ -13,14 +13,18 @@ export const reviewSchema = z.object({
   rating: z.coerce.number().int().min(1, { error: "Pick a star rating." }).max(5),
   headline: z.string().trim().min(2, { error: "Add a short headline." }).max(80),
   body: z.string().trim().min(10, { error: "Tell us a bit more (at least 10 characters)." }).max(2000),
-  name: z.string().trim().min(1, { error: "Add your name." }).max(60),
-  email: z.string().trim().pipe(z.email({ error: "Enter a valid email address." })),
 })
+
+/** Review photos: at most 5, each up to 5 MB, common image types. Checked in the browser and on the server. */
+export const REVIEW_PHOTOS = {
+  max: 5,
+  maxBytes: 5 * 1024 * 1024,
+  types: ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"],
+} as const
 
 export const questionSchema = z.object({
   ...productFields,
   question: z.string().trim().min(5, { error: "Type your question (at least 5 characters)." }).max(500),
-  email: z.string().trim().pipe(z.email({ error: "Enter a valid email so we can reply." })),
 })
 
 export type FormState =
