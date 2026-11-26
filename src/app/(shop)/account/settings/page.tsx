@@ -1,13 +1,15 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
-import { LogOutIcon, MapPinIcon, StarIcon } from "lucide-react"
+import { LogOutIcon } from "lucide-react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { Skeleton } from "@/components/ui/skeleton"
 import { AccountSidebar } from "@/features/account/components/account-sidebar"
+import { AddressBook } from "@/features/account/components/address-book"
 import { ProfileForm } from "@/features/account/components/profile-form"
 import { getOrders, getProfile } from "@/features/account/session.server"
+import { getAvailableCountries, getCountry } from "@/lib/market/market.server"
 
 export const metadata: Metadata = { title: "Settings", robots: { index: false } }
 
@@ -36,7 +38,7 @@ async function SettingsContent() {
       </p>
     )
   }
-  const orders = await getOrders().catch(() => [])
+  const [orders, countries, country] = await Promise.all([getOrders().catch(() => []), getAvailableCountries(), getCountry()])
   const onTheWay = orders.filter((o) => o.kind === "processing" || o.kind === "transit").length
   const firstName = profile.firstName || profile.email.split("@")[0] || "there"
 
@@ -50,33 +52,13 @@ async function SettingsContent() {
           <ProfileForm firstName={profile.firstName} lastName={profile.lastName} email={profile.email} phone={profile.phone} />
         </Card>
 
-        <Card title="Saved addresses" description="Addresses you use at checkout are saved here for next time.">
-          {profile.addresses.length === 0 ? (
-            <p className="flex items-center gap-2.5 rounded-xl bg-cream px-4 py-3 text-sm text-slate">
-              <MapPinIcon aria-hidden="true" className="size-4 text-teal" />
-              No saved addresses yet. Your next checkout will add one.
-            </p>
-          ) : (
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {profile.addresses.map((a) => (
-                <li key={a.id} className="flex flex-col gap-2 rounded-xl border border-line-soft bg-cream/60 p-4 text-sm leading-relaxed">
-                  {a.isDefault && (
-                    <span className="inline-flex items-center gap-1 self-start rounded-full bg-teal-soft px-2 py-0.5 text-xs font-bold text-teal">
-                      <StarIcon aria-hidden="true" className="size-3 fill-teal" />
-                      Default
-                    </span>
-                  )}
-                  <address className="not-italic">
-                    {a.lines.map((line, i) => (
-                      <span key={i} className={i === 0 ? "block font-semibold text-ink" : "block text-slate"}>
-                        {line}
-                      </span>
-                    ))}
-                  </address>
-                </li>
-              ))}
-            </ul>
-          )}
+        <Card title="Saved addresses" description="Your addresses are offered at checkout, so you don't type them again.">
+          <AddressBook
+            addresses={profile.addresses}
+            countries={countries.map((c) => ({ code: c.code, name: c.name }))}
+            defaultCountry={country}
+            name={{ firstName: profile.firstName, lastName: profile.lastName }}
+          />
         </Card>
 
         <Card title="Sign out" description="Sign out of Mcesta on this device.">

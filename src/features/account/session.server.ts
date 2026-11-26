@@ -3,6 +3,7 @@ import "server-only"
 import { getSavedVariants } from "@/features/cart/cart.server"
 
 import { customerFetch, customerLoginConfigured } from "./customer-auth.server"
+import type { AddressFields, SavedAddress } from "./address-zones"
 import type { Customer, Order, OrderKind } from "./types"
 
 /*
@@ -234,7 +235,7 @@ export type Profile = {
   lastName: string
   email: string
   phone: string | null
-  addresses: { id: string; lines: string[]; isDefault: boolean }[]
+  addresses: SavedAddress[]
 }
 
 /** Profile + saved addresses for the settings page. null = not logged in. */
@@ -247,7 +248,21 @@ export async function getProfile(): Promise<Profile | null> {
       emailAddress: { emailAddress: string } | null
       phoneNumber: { phoneNumber: string } | null
       defaultAddress: { id: string } | null
-      addresses: { nodes: { id: string; formatted: string[] }[] }
+      addresses: {
+        nodes: {
+          id: string
+          formatted: string[]
+          firstName: string | null
+          lastName: string | null
+          phoneNumber: string | null
+          address1: string | null
+          address2: string | null
+          city: string | null
+          zoneCode: string | null
+          zip: string | null
+          countryCode: string | null
+        }[]
+      }
     }
   }
   const data = await customerFetch<Raw>(/* GraphQL */ `
@@ -258,7 +273,9 @@ export async function getProfile(): Promise<Profile | null> {
         emailAddress { emailAddress }
         phoneNumber { phoneNumber }
         defaultAddress { id }
-        addresses(first: 10) { nodes { id formatted(withName: true) } }
+        addresses(first: 20) {
+          nodes { id formatted(withName: true) firstName lastName phoneNumber address1 address2 city zoneCode zip countryCode }
+        }
       }
     }
   `)
@@ -269,7 +286,23 @@ export async function getProfile(): Promise<Profile | null> {
     lastName: c.lastName ?? "",
     email: c.emailAddress?.emailAddress ?? "",
     phone: c.phoneNumber?.phoneNumber ?? null,
-    addresses: c.addresses.nodes.map((a) => ({ id: a.id, lines: a.formatted, isDefault: a.id === c.defaultAddress?.id })),
+    addresses: c.addresses.nodes
+      .map((a) => ({
+        id: a.id,
+        lines: a.formatted,
+        isDefault: a.id === c.defaultAddress?.id,
+        firstName: a.firstName ?? "",
+        lastName: a.lastName ?? "",
+        phone: a.phoneNumber ?? "",
+        address1: a.address1 ?? "",
+        address2: a.address2 ?? "",
+        city: a.city ?? "",
+        zone: a.zoneCode ?? "",
+        zip: a.zip ?? "",
+        country: a.countryCode ?? "",
+      }))
+      // Default first.
+      .sort((a, b) => Number(b.isDefault) - Number(a.isDefault)),
   }
 }
 
@@ -329,4 +362,71 @@ export function publicName(identity: Pick<CustomerIdentity, "firstName" | "lastN
   const first = identity.firstName.trim() || identity.email.split("@")[0] || "Shopper"
   const last = identity.lastName.trim()
   return last ? `${first} ${last[0].toUpperCase()}.` : first
+}
+
+type UserErrors = { userErrors: { message: string }[] }
+
+function addressInput(a: AddressFields) {
+  return {
+    firstName: a.firstName,
+    lastName: a.lastName,
+    phoneNumber: a.phone || null,
+    address1: a.address1,
+    address2: a.address2 || null,
+    city: a.city,
+    zoneCode: a.zone || null,
+    zip: a.zip,
+    countryCode: a.country,
+  }
+}
+
+/** Add a new address, or change an existing one (id). Returns an error message, or null. */
+export async function saveAddress(address: AddressFields, opts: { id?: string; makeDefault: boolean }): Promise<string | null> {
+  const variables = { address: addressInput(address), defaultAddress: opts.makeDefault }
+  if (opts.id) {
+    const data = await customerFetch<{ customerAddressUpdate: UserErrors }>(
+      /* GraphQL */ `
+        mutation UpdateAddress($id: ID!, $address: CustomerAddressInput!, $defaultAddress: Boolean) {
+          customerAddressUpdate(addressId: $id, address: $address, defaultAddress: $defaultAddress) {
+            userErrors { message }
+          }
+        }
+      `,
+      { ...variables, id: opts.id }
+    )
+    if (!data) return "Please log in again."
+    return data.customerAddressUpdate.userErrors[0]?.message ?? null
+  }
+  const data = await customerFetch<{ customerAddressCreate: UserErrors }>(
+    /* GraphQL */ `
+      mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) {
+        customerAddressCreate(address: $address, defaultAddress: $defaultAddress) {
+          userErrors { message }
+        }
+      }
+    `,
+    variables
+  )
+  if (!data) return "Please log in again."
+  return data.customerAddressCreate.userErrors[0]?.message ?? null
+}
+
+export async function deleteAddress(id: string): Promise<string | null> {
+  const data = await customerFetch<{ customerAddressDelete: UserErrors }>(
+    /* GraphQL */ `
+      mutation DeleteAddress($id: ID!) {
+        customerAddressDelete(addressId: $id) {
+          userErrors { message }
+        }
+      }
+    `,
+    { id }
+  )
+  if (!data) return "Please log in again."
+  return data.customerAddressDelete.userErrors[0]?.message ?? null
+}
+
+/** Make an existing address the default (the update mutation with only that flag). */
+export async function setDefaultAddress(address: SavedAddress): Promise<string | null> {
+  return saveAddress(address, { id: address.id, makeDefault: true })
 }
