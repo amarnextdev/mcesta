@@ -6,6 +6,7 @@ import { z } from "zod"
 import { fieldErrors, type FormState } from "@/features/product/feedback"
 
 import { normalizePostal, postalRule } from "@/features/product/delivery-check"
+import { lookupPlace } from "@/features/product/delivery-check.server"
 
 import { ADDRESS_ZONES } from "./address-zones"
 import { deleteAddress, getProfile, saveAddress, setDefaultAddress, updateName } from "./session.server"
@@ -127,4 +128,35 @@ export async function makeDefaultAddressAction(id: string): Promise<{ ok: boolea
     console.error("[account] default address", error)
     return { ok: false, error: "We couldn't update your default address." }
   }
+}
+
+/** India Post's PIN directory: district (city) and state. More complete than generic lists for India. */
+async function indiaPin(pin: string): Promise<{ name: string; province: string | null; provinceCode: null } | null> {
+  try {
+    const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`, {
+      signal: AbortSignal.timeout(3000),
+      next: { revalidate: 60 * 60 * 24 * 30 },
+    })
+    if (!res.ok) return null
+    const [first] = (await res.json()) as { Status: string; PostOffice: { District: string; State: string }[] | null }[]
+    const office = first?.Status === "Success" ? first.PostOffice?.[0] : undefined
+    return office ? { name: office.District, province: office.State, provinceCode: null } : null
+  } catch {
+    return null
+  }
+}
+
+/** PIN / ZIP → city and state, to fill the address form as the shopper types. */
+export async function lookupPostalAction(country: string, code: string): Promise<{ city: string; zone: string | null } | null> {
+  if (!/^[A-Z]{2}$/.test(country) || typeof code !== "string") return null
+  const value = normalizePostal(code)
+  if (!postalRule(country).pattern.test(value)) return null
+  const place = country === "IN" ? await indiaPin(value) : await lookupPlace(country, value)
+  if (!place) return null
+  const zones = ADDRESS_ZONES[country]
+  const zone =
+    zones?.find((z) => z.code === place.provinceCode)?.code ??
+    zones?.find((z) => z.name.toLowerCase() === place.province?.toLowerCase())?.code ??
+    null
+  return { city: place.name, zone }
 }

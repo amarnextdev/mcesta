@@ -55,13 +55,13 @@ type EstimateData = {
   }
 }
 
-type Place = { name: string; province: string | null; provinceCode: string | null }
+export type Place = { name: string; province: string | null; provinceCode: string | null }
 
 /**
  * City and state for a postal code (Zippopotam, free and keyless). Also proves the code exists.
  * null = code not in its list; undefined = service unreachable. Either way we carry on without it.
  */
-async function lookupPlace(country: string, code: string): Promise<Place | null | undefined> {
+export async function lookupPlace(country: string, code: string): Promise<Place | null | undefined> {
   // UK and Canada are listed by the first part of the code only.
   const key = country === "GB" || country === "CA" ? code.split(" ")[0] ?? code : code
   try {

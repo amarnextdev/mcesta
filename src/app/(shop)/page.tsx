@@ -1,7 +1,7 @@
 import { PageType } from "@/components/layout/page-type"
 import { BundleSpotlight } from "@/features/home/components/bundle-spotlight"
 import { FeaturedCollections } from "@/features/home/components/featured-collections"
-import { FindsByFinn } from "@/features/home/components/finds-by-finn"
+// import { FindsByFinn } from "@/features/home/components/finds-by-finn"
 import { HeroCarousel } from "@/features/home/components/hero-carousel"
 import { HeroSideCards } from "@/features/home/components/hero-side-cards"
 import { NewsletterSection } from "@/features/home/components/newsletter-section"
@@ -9,7 +9,7 @@ import { StorePromises } from "@/features/home/components/store-promises"
 import {
   bundleSpotlight,
   featuredTiles,
-  finn,
+  // finn,
   heroSlides,
   homeShelves,
   newsletter,
@@ -33,7 +33,8 @@ export default function HomePage() {
       <ProductShelf config={homeShelves.deals} className="pt-14" />
       <BundleSpotlight bundle={bundleSpotlight} className="pt-14" />
       <ProductShelf config={homeShelves.newIn} className="pt-16" />
-      <FindsByFinn name={finn.name} intro={finn.intro} reels={finn.reels} className="pt-16" />
+      {/* "Finds by Finn" video reels: hidden until real videos are ready (see features/home). */}
+      {/* <FindsByFinn name={finn.name} intro={finn.intro} reels={finn.reels} className="pt-16" /> */}
       <StorePromises promises={promises} className="pt-16" />
       <NewsletterSection content={newsletter} className="pt-16" />
     </div>

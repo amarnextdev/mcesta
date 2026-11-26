@@ -1,17 +1,18 @@
 "use client"
 
 import { useActionState, useEffect, useRef, useState, useTransition } from "react"
-import { MapPinIcon, PencilIcon, PlusIcon, StarIcon, Trash2Icon } from "lucide-react"
+import { CheckIcon, Loader2Icon, MapPinIcon, PencilIcon, PlusIcon, StarIcon, Trash2Icon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { FormField, inputClass } from "@/features/product/components/detail/form-field"
-import { postalRule } from "@/features/product/delivery-check"
+import { normalizePostal, postalRule } from "@/features/product/delivery-check"
 import { idleState, type FormState } from "@/features/product/feedback"
+import { flagUrl } from "@/lib/market/countries"
 import { cn } from "@/lib/utils"
 
-import { deleteAddressAction, makeDefaultAddressAction, saveAddressAction } from "../actions"
+import { deleteAddressAction, lookupPostalAction, makeDefaultAddressAction, saveAddressAction } from "../actions"
 import { ADDRESS_ZONES, type SavedAddress } from "../address-zones"
 
 type Country = { code: string; name: string }
@@ -112,9 +113,11 @@ export function AddressBook({
       </Button>
 
       <Dialog open={editing !== null} onOpenChange={(open) => !open && setEditing(null)}>
-        <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto rounded-2xl p-6">
-          <DialogTitle className="font-heading text-xl">{editing === "new" ? "Add a new address" : "Edit address"}</DialogTitle>
-          <DialogDescription className="sr-only">Delivery address details</DialogDescription>
+        <DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto rounded-2xl bg-white p-6">
+          <div className="flex flex-col gap-1">
+            <DialogTitle className="font-heading text-xl">{editing === "new" ? "Add a new address" : "Edit address"}</DialogTitle>
+            <DialogDescription className="text-sm text-slate">Saved to your account and offered at checkout.</DialogDescription>
+          </div>
           {editing !== null && (
             <AddressForm
               key={editing === "new" ? "new" : editing.id}
@@ -129,6 +132,27 @@ export function AddressBook({
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+/** Calling codes for the phone prefix. Others: the shopper types the full +number. */
+const DIAL_CODES: Record<string, string> = { IN: "91", US: "1", CA: "1", GB: "44", AU: "61", AE: "971", SG: "65", NZ: "64", IE: "353" }
+
+/** Stored "+916377579544" (or Shopify's "06377579544") → "6377579544" for the input next to the +91 prefix. */
+function nationalNumber(phone: string, country: string) {
+  const dial = DIAL_CODES[country]
+  const digits = phone.replace(/[^\d+]/g, "")
+  if (dial && digits.startsWith(`+${dial}`)) return digits.slice(dial.length + 1)
+  if (dial && digits.startsWith("0")) return digits.slice(1)
+  return digits
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <fieldset className="flex flex-col gap-3.5">
+      <legend className="mb-3 text-xs font-bold tracking-[0.08em] text-teal uppercase">{title}</legend>
+      {children}
+    </fieldset>
   )
 }
 
@@ -149,9 +173,16 @@ function AddressForm({
 }) {
   const [state, action, pending] = useActionState(saveAddressAction, idleState)
   const [country, setCountry] = useState(address?.country || defaultCountry)
+  const [city, setCity] = useState(address?.city ?? "")
+  const [zone, setZone] = useState(address?.zone ?? "")
+  const [phone, setPhone] = useState(() => nationalNumber(address?.phone ?? "", address?.country || defaultCountry))
+  const [looking, startLookup] = useTransition()
+  const [found, setFound] = useState<string | null>(null)
   const errors = state.status === "error" ? (state.fields ?? {}) : {}
   const zones = ADDRESS_ZONES[country]
   const postal = postalRule(country)
+  const dial = DIAL_CODES[country]
+  const flag = countries.find((c) => c.code === country) ? flagUrl(country, 40) : null
 
   // Once per successful save (the parent re-renders with a new onDone, so guard with a ref).
   const handled = useRef<FormState | null>(null)
@@ -162,90 +193,153 @@ function AddressForm({
     onDone()
   }, [state, address, onDone])
 
+  /** A complete PIN / ZIP fills city and state (India Post for India, Zippopotam elsewhere). */
+  function onPostal(value: string) {
+    setFound(null)
+    if (!postal.pattern.test(normalizePostal(value))) return
+    startLookup(async () => {
+      const place = await lookupPostalAction(country, value)
+      if (!place) return
+      setCity(place.city)
+      if (place.zone) setZone(place.zone)
+      setFound([place.city, zones?.find((z) => z.code === place.zone)?.name].filter(Boolean).join(", "))
+    })
+  }
+
   return (
-    <form action={action} className="mt-2 flex flex-col gap-3.5">
+    <form action={action} className="mt-1 flex flex-col gap-6">
       {address && <input type="hidden" name="id" value={address.id} />}
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <FormField label="First name" error={errors.firstName}>
-          {(p) => <input {...p} name="firstName" defaultValue={address?.firstName ?? name.firstName} autoComplete="given-name" className={inputClass} />}
-        </FormField>
-        <FormField label="Last name" error={errors.lastName}>
-          {(p) => <input {...p} name="lastName" defaultValue={address?.lastName ?? name.lastName} autoComplete="family-name" className={inputClass} />}
-        </FormField>
-      </div>
-      <FormField label="Phone (for delivery updates)" error={errors.phone}>
-        {(p) => (
-          <input
-            {...p}
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            defaultValue={address?.phone ?? ""}
-            placeholder={country === "IN" ? "98765 43210" : "Phone number"}
-            autoComplete="tel"
-            className={inputClass}
-          />
-        )}
-      </FormField>
-      <FormField label="House no., building, street" error={errors.address1}>
-        {(p) => <input {...p} name="address1" defaultValue={address?.address1 ?? ""} autoComplete="address-line1" className={inputClass} />}
-      </FormField>
-      <FormField label="Area, landmark (optional)" error={errors.address2}>
-        {(p) => <input {...p} name="address2" defaultValue={address?.address2 ?? ""} autoComplete="address-line2" className={inputClass} />}
-      </FormField>
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <FormField label="City" error={errors.city}>
-          {(p) => <input {...p} name="city" defaultValue={address?.city ?? ""} autoComplete="address-level2" className={inputClass} />}
-        </FormField>
-        <FormField label={postal.label.charAt(0).toUpperCase() + postal.label.slice(1)} error={errors.zip}>
+      <input type="hidden" name="phone" value={phone && dial && !phone.startsWith("+") ? `+${dial}${phone}` : phone} />
+
+      <Section title="Contact">
+        <div className="grid gap-3.5 sm:grid-cols-2">
+          <FormField label="First name" error={errors.firstName}>
+            {(p) => <input {...p} name="firstName" defaultValue={address?.firstName ?? name.firstName} autoComplete="given-name" className={inputClass} />}
+          </FormField>
+          <FormField label="Last name" error={errors.lastName}>
+            {(p) => <input {...p} name="lastName" defaultValue={address?.lastName ?? name.lastName} autoComplete="family-name" className={inputClass} />}
+          </FormField>
+        </div>
+        <FormField label="Mobile number (for delivery updates)" error={errors.phone}>
           {(p) => (
-            <input
-              {...p}
-              name="zip"
-              defaultValue={address?.zip ?? ""}
-              placeholder={postal.placeholder}
-              inputMode={country === "IN" || country === "US" ? "numeric" : "text"}
-              autoComplete="postal-code"
-              className={cn(inputClass, "uppercase")}
-            />
+            <div
+              className={cn(
+                "flex items-center overflow-hidden rounded-[10px] border-[1.5px] bg-white focus-within:border-teal focus-within:ring-3 focus-within:ring-ring/40",
+                p["aria-invalid"] ? "border-[#a33a1f]" : "border-line-strong"
+              )}
+            >
+              {dial && (
+                <span className="flex h-full items-center gap-1.5 border-r border-line-soft bg-cream px-3 py-2.5 text-[0.9375rem] font-semibold text-ink tabular-nums">
+                  {flag && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={flag} alt="" width={20} height={15} className="h-[15px] w-5 rounded-[3px] object-cover ring-1 ring-black/10" />
+                  )}
+                  +{dial}
+                </span>
+              )}
+              <input
+                id={p.id}
+                aria-invalid={p["aria-invalid"]}
+                aria-describedby={p["aria-describedby"]}
+                type="tel"
+                inputMode="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/[^\d+ ]/g, ""))}
+                placeholder={country === "IN" ? "98765 43210" : dial ? "Phone number" : "+ country code and number"}
+                autoComplete="tel-national"
+                className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[0.9375rem] text-ink outline-none tabular-nums"
+              />
+            </div>
           )}
         </FormField>
-      </div>
-      <div className="grid gap-3.5 sm:grid-cols-2">
-        <FormField label="Country" error={errors.country}>
-          {(p) => (
-            <select {...p} name="country" value={country} onChange={(e) => setCountry(e.target.value)} autoComplete="country" className={inputClass}>
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          )}
-        </FormField>
-        {zones ? (
-          <FormField label="State" error={errors.zone}>
+      </Section>
+
+      <Section title="Address">
+        <div className="grid gap-3.5 sm:grid-cols-2">
+          <FormField label="Country" error={errors.country}>
             {(p) => (
-              <select {...p} key={country} name="zone" defaultValue={address?.country === country ? address.zone : ""} autoComplete="address-level1" className={inputClass}>
-                <option value="" disabled>
-                  Select state
-                </option>
-                {zones.map((z) => (
-                  <option key={z.code} value={z.code}>
-                    {z.name}
+              <select
+                {...p}
+                name="country"
+                value={country}
+                onChange={(e) => {
+                  setCountry(e.target.value)
+                  setZone("")
+                  setFound(null)
+                }}
+                autoComplete="country"
+                className={inputClass}
+              >
+                {countries.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.name}
                   </option>
                 ))}
               </select>
             )}
           </FormField>
-        ) : (
-          <input type="hidden" name="zone" value="" />
+          <FormField label={postal.label.charAt(0).toUpperCase() + postal.label.slice(1)} error={errors.zip}>
+            {(p) => (
+              <div className="relative">
+                <input
+                  {...p}
+                  name="zip"
+                  defaultValue={address?.zip ?? ""}
+                  onChange={(e) => onPostal(e.target.value)}
+                  placeholder={postal.placeholder}
+                  inputMode={country === "IN" || country === "US" ? "numeric" : "text"}
+                  autoComplete="postal-code"
+                  className={cn(inputClass, "pr-9 uppercase")}
+                />
+                {looking && <Loader2Icon aria-hidden="true" className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-teal" />}
+              </div>
+            )}
+          </FormField>
+        </div>
+        {found && (
+          <p aria-live="polite" className="-mt-1.5 flex items-center gap-1.5 text-[0.8125rem] font-semibold text-success">
+            <CheckIcon aria-hidden="true" className="size-4" strokeWidth={2.5} />
+            {found}: city and state filled in
+          </p>
         )}
-      </div>
+        <FormField label="House no., building, street" error={errors.address1}>
+          {(p) => <input {...p} name="address1" defaultValue={address?.address1 ?? ""} placeholder="e.g. 12, Rose Apartments, MG Road" autoComplete="address-line1" className={inputClass} />}
+        </FormField>
+        <FormField label="Area, landmark (optional)" error={errors.address2}>
+          {(p) => <input {...p} name="address2" defaultValue={address?.address2 ?? ""} placeholder="e.g. Near City Hospital" autoComplete="address-line2" className={inputClass} />}
+        </FormField>
+        <div className="grid gap-3.5 sm:grid-cols-2">
+          <FormField label="City / District" error={errors.city}>
+            {(p) => <input {...p} name="city" value={city} onChange={(e) => setCity(e.target.value)} autoComplete="address-level2" className={inputClass} />}
+          </FormField>
+          {zones ? (
+            <FormField label="State" error={errors.zone}>
+              {(p) => (
+                <select {...p} name="zone" value={zone} onChange={(e) => setZone(e.target.value)} autoComplete="address-level1" className={inputClass}>
+                  <option value="" disabled>
+                    Select state
+                  </option>
+                  {zones.map((z) => (
+                    <option key={z.code} value={z.code}>
+                      {z.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </FormField>
+          ) : (
+            <input type="hidden" name="zone" value="" />
+          )}
+        </div>
+      </Section>
+
       {!address?.isDefault && (
-        <label className="flex items-center gap-2.5 text-sm">
+        <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-line-soft bg-white px-4 py-3 text-sm">
           <input type="checkbox" name="makeDefault" defaultChecked={firstAddress} className="size-4 accent-teal" />
-          Make this my default address
+          <span>
+            <span className="font-semibold">Make this my default address</span>
+            <span className="block text-xs text-slate">Picked first at checkout.</span>
+          </span>
         </label>
       )}
       {state.status === "error" && !state.fields && (
@@ -253,7 +347,7 @@ function AddressForm({
           {state.message}
         </p>
       )}
-      <div className="flex justify-end gap-2.5 pt-1">
+      <div className="sticky -bottom-6 -mx-6 -mb-6 flex justify-end gap-2.5 border-t border-line-soft bg-white/95 px-6 py-4 backdrop-blur">
         <Button type="button" variant="ghost" onClick={onDone} className="h-11 text-slate">
           Cancel
         </Button>
