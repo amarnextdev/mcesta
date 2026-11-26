@@ -52,9 +52,9 @@ function listVariables(params: ListParams) {
   const tag = tabTag(params.tab)
   const filters = tag ? [...params.filters, { tag }] : params.filters
   if (params.handle === ALL_PRODUCTS_HANDLE) {
-    return { ...allProductsSortVariables(params.sort), query: toSearchQuery(filters) || null }
+    return { ...allProductsSortVariables(params.sort), query: toSearchQuery(filters) || null, country: params.country }
   }
-  return { handle: params.handle, ...collectionSortVariables(params.sort), filters }
+  return { handle: params.handle, ...collectionSortVariables(params.sort), filters, country: params.country }
 }
 
 export async function loadCursorIndex(params: ListParams, fetcher: Fetcher, signal?: AbortSignal): Promise<CursorIndex | null> {
@@ -64,7 +64,7 @@ export async function loadCursorIndex(params: ListParams, fetcher: Fetcher, sign
   let hasNext = true
 
   while (hasNext && cursors.length < INDEX_LIMIT) {
-    const variables = { ...listVariables(params), first: INDEX_BATCH, after }
+    const variables: Record<string, unknown> = { ...listVariables(params), first: INDEX_BATCH, after }
     let page: CursorPage | null
     if (isAll) {
       page = (await fetcher<{ products: CursorPage }>({ query: ALL_PRODUCT_CURSORS_QUERY, variables, signal })).products

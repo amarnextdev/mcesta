@@ -1,14 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { Suspense } from "react"
 
 import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { OrderDetails } from "@/features/account/components/order-details"
-import { getPreviewOrders } from "@/features/account/preview"
-import { getCustomer, getOrder, isPreviewMode } from "@/features/account/session.server"
+import { accessToken, hasSession } from "@/features/account/customer-auth.server"
+import { getCustomer, getOrder } from "@/features/account/session.server"
 
 export const metadata: Metadata = { title: "Order details", robots: { index: false } }
 
@@ -18,14 +18,15 @@ async function OrderContent({ params }: Pick<Props, "params">) {
   const { id } = await params
   const customer = await getCustomer()
 
-  if (!customer && !isPreviewMode(undefined)) {
+  if (!customer) {
+    if (!(await accessToken()) && (await hasSession())) redirect(`/account/auth/start?returnTo=${encodeURIComponent(`/account/orders/${id}`)}`)
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-[1.625rem] leading-tight">Log in to see this order</h1>
         <p className="text-[0.9375rem] text-slate">Or track it as a guest with your order number and email.</p>
         <div className="flex gap-2.5">
           <Button asChild size="lg">
-            <Link href="/account/login" prefetch={false}>
+            <Link href={`/account/login?returnTo=/account/orders/${id}`} prefetch={false}>
               Log in
             </Link>
           </Button>
@@ -37,7 +38,7 @@ async function OrderContent({ params }: Pick<Props, "params">) {
     )
   }
 
-  const order = customer ? await getOrder(id) : (getPreviewOrders().find((o) => o.id === id) ?? null)
+  const order = await getOrder(id)
   if (!order) notFound()
 
   return (
@@ -51,11 +52,6 @@ async function OrderContent({ params }: Pick<Props, "params">) {
           { label: `Order ${order.name}` },
         ]}
       />
-      {!customer && (
-        <p role="note" className="mb-4 rounded-xl bg-terra-soft px-4 py-2.5 text-[0.8125rem] font-medium text-terra-text">
-          Sample order (development only).
-        </p>
-      )}
       <OrderDetails order={order} />
     </>
   )

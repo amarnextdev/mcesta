@@ -1,5 +1,6 @@
 import {
   BookOpenIcon,
+  CarIcon,
   ChefHatIcon,
   DumbbellIcon,
   GiftIcon,
@@ -15,7 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-import type { CategoryIcon } from "@/lib/config/navigation"
+import type { CategoryIcon } from "@/lib/navigation"
 
 export const categoryIcons: Record<CategoryIcon, LucideIcon> = {
   "for-you": ShoppingBagIcon,
@@ -29,6 +30,7 @@ export const categoryIcons: Record<CategoryIcon, LucideIcon> = {
   sports: DumbbellIcon,
   pets: PawPrintIcon,
   books: BookOpenIcon,
+  car: CarIcon,
   track: TruckIcon,
   help: LifeBuoyIcon,
 }

@@ -1,17 +1,19 @@
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowRightIcon, ChevronRightIcon } from "lucide-react"
 
 import { departmentBanners } from "@/features/department/data"
 import {
-  allCategories,
   categoryHref,
   departmentAllHref,
+  departmentHandles,
   departmentHref,
-  departments,
   forYouLink,
+  subcategoryHref,
   utilityLinks,
+  type Category,
   type Department,
-} from "@/lib/config/navigation"
+} from "@/lib/navigation"
 import { cn } from "@/lib/utils"
 
 import { categoryIcons } from "./category-icons"
@@ -52,10 +54,58 @@ function MenuLink({ href, label }: { href: string; label: string }) {
   )
 }
 
+/** One category in the dropdown: photo + name (links to the category), its sub-categories below. */
+function CategoryColumn({
+  department,
+  category,
+  Icon,
+}: {
+  department: Department
+  category: Category
+  Icon: (typeof categoryIcons)[keyof typeof categoryIcons]
+}) {
+  const subs = category.subcategories
+  return (
+    <div className="flex min-w-0 flex-col gap-1">
+      <Link
+        href={categoryHref(department, category)}
+        className="group/cat flex items-center gap-3 rounded-xl p-1.5 pr-3 transition-colors hover:bg-sand focus-visible:bg-sand focus-visible:outline-none"
+      >
+        <span className="relative grid size-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-sand text-ink/50 ring-1 ring-ink/5">
+          {category.image ? (
+            <Image src={category.image.url} alt="" fill sizes="48px" className="object-cover" />
+          ) : (
+            <Icon aria-hidden="true" className="size-5" strokeWidth={1.7} />
+          )}
+        </span>
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span className="line-clamp-2 text-[0.9375rem] font-semibold text-ink group-hover/cat:text-teal">{category.label}</span>
+          <span className="text-xs text-slate">
+            {subs.length > 0 ? `${subs.length} ${subs.length === 1 ? "type" : "types"}` : "Shop now"}
+          </span>
+        </span>
+        <ChevronRightIcon
+          aria-hidden="true"
+          className="ml-auto size-4 shrink-0 text-slate opacity-0 transition group-hover/cat:translate-x-0.5 group-hover/cat:opacity-100"
+        />
+      </Link>
+      {subs.length > 0 && (
+        <ul className="ml-[1.9rem] border-l border-line-soft pl-2">
+          {subs.map((sub) => (
+            <li key={sub.slug}>
+              <MenuLink href={subcategoryHref(department, category, sub)} label={sub.label} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 /** Desktop dropdown on product-list pages: department summary, its categories and an offer. */
 function DepartmentDropdown({ department }: { department: Department }) {
   const Icon = categoryIcons[department.icon]
-  const count = allCategories(department).length
+  const count = department.categories.length
   const promo = departmentBanners(department)[0]
 
   return (
@@ -68,7 +118,9 @@ function DepartmentDropdown({ department }: { department: Department }) {
             </span>
             <span className="flex flex-col gap-0.5">
               <span className="font-heading text-[1.25rem] leading-tight">{department.label}</span>
-              <span className="text-[0.8125rem] text-slate">{count} categories</span>
+              <span className="text-[0.8125rem] text-slate">
+                {count} {count === 1 ? "category" : "categories"}
+              </span>
             </span>
             <Link
               href={departmentAllHref(department)}
@@ -79,18 +131,9 @@ function DepartmentDropdown({ department }: { department: Department }) {
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-x-8 gap-y-5">
-            {department.groups.map((group) => (
-              <div key={group.title} className="min-w-44">
-                <span className={cn(groupTitle, "px-2.5")}>{group.title}</span>
-                <ul className={cn("grid gap-x-4", group.categories.length > 6 && "grid-cols-2")}>
-                  {group.categories.map((c) => (
-                    <li key={c.slug}>
-                      <MenuLink href={categoryHref(department, c)} label={c.label} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="grid content-start gap-x-6 gap-y-5 [grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]">
+            {department.categories.map((c) => (
+              <CategoryColumn key={c.slug} department={department} category={c} Icon={Icon} />
             ))}
             {department.popular.length > 0 && (
               <div className="min-w-44">
@@ -129,7 +172,8 @@ function DepartmentDropdown({ department }: { department: Department }) {
   )
 }
 
-export function CategoryNav() {
+/** The category bar. Departments come from the Shopify menu (see navigation.server.ts). */
+export function CategoryNav({ departments }: { departments: Department[] }) {
   return (
     <DropdownNav className="group/nav relative border-t border-line-soft bg-white">
       <div className="container-shop">
@@ -144,6 +188,7 @@ export function CategoryNav() {
                 label={d.label}
                 href={departmentHref(d)}
                 listingHref={departmentAllHref(d)}
+                handles={departmentHandles(d)}
                 icon={d.icon}
                 highlight={d.highlight}
               />

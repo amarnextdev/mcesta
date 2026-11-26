@@ -13,6 +13,7 @@ export function productListVariables(params: ProductListParams = {}) {
     sortKey: params.sortKey ?? "BEST_SELLING",
     reverse: params.reverse ?? false,
     query: params.query ?? null,
+    country: params.country ?? null,
   }
 }
 

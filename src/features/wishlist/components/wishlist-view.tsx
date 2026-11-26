@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useState, useSyncExternalStore } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useMemo, useState } from "react"
 import { HeartIcon, ShoppingBagIcon, TrendingDownIcon } from "lucide-react"
 import { toast } from "sonner"
 
@@ -20,7 +19,6 @@ import { ProductCard } from "@/features/product/components/product-card"
 import { formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
-import { refreshWishlistAction } from "../actions"
 import { useWishlist, type WishItem } from "../store"
 
 type Filter = "all" | "drops" | "sale" | "soldout"
@@ -35,31 +33,23 @@ const sorts: { value: Sort; label: string }[] = [
 /** Fixed time zone so server and browser agree (the list itself only renders in the browser). */
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" })
 
-/** Wishlist page body (design: Wishlist.dc.html). Live prices are refreshed from Shopify. */
+/** Wishlist page body (design: Wishlist.dc.html). Prices are live from Shopify (via the server). */
 export function WishlistView() {
-  const { items: saved, add, remove } = useWishlist()
+  const { items: saved, add, remove, ready: loaded } = useWishlist()
   const addToCart = useAddToCart()
   const [filter, setFilter] = useState<Filter>("all")
   const [sort, setSort] = useState<Sort>("recent")
 
-  // Current price and stock for everything saved (cached a few minutes on the server).
-  const ids = saved.map((i) => i.id)
-  const { data: fresh } = useQuery({
-    queryKey: ["wishlist-fresh", [...ids].sort()],
-    queryFn: () => refreshWishlistAction(ids),
-    enabled: ids.length > 0,
-    staleTime: 5 * 60_000,
-  })
-
+  // The server returns live prices; deleted products are already left out.
   const items = useMemo(
     () =>
       saved.map((item) => {
-        const live = fresh?.[item.id]
-        const current: WishItem = live ? { ...item, ...live, savedAt: item.savedAt, savedPrice: item.savedPrice } : item
-        const drop = item.savedPrice.amount - current.price.amount
-        return { item: current, drop: drop > 0.005 ? drop : 0, gone: Boolean(fresh) && !live }
+        // Saved in another market's currency → amounts can't be compared.
+        const drop =
+          item.savedPrice.currencyCode === item.price.currencyCode ? item.savedPrice.amount - item.price.amount : 0
+        return { item, drop: drop > 0.005 ? drop : 0, gone: false }
       }),
-    [saved, fresh]
+    [saved]
   )
 
   const counts = {
@@ -95,13 +85,8 @@ export function WishlistView() {
     toast("Removed from wishlist", { description: item.title, action: { label: "Undo", onClick: () => add(item) } })
   }
 
-  // The wishlist lives in this browser: show a placeholder until it has been read.
-  const inBrowser = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  )
-  if (!inBrowser) {
+  // Show a placeholder until the wishlist has loaded (not a false "empty").
+  if (!loaded) {
     return (
       <div aria-hidden="true" className="flex flex-col gap-4">
         <Skeleton className="h-9 w-40" />

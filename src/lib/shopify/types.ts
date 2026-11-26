@@ -101,6 +101,18 @@ export type ShopifyProductDetail = {
     }[]
   }
   collections: { nodes: { handle: string; title: string }[] }
+  category: { name: string } | null
+  attributes: ({
+    key: string
+    value: string
+    type: string
+    references: { nodes: { label?: { value: string } | null; color?: { value: string } | null }[] } | null
+  } | null)[]
+  care: { value: string } | null
+  customSpecs: { value: string } | null
+  inTheBox: { value: string } | null
+  warranty: { value: string } | null
+  highlights: { value: string } | null
   faq: { value: string } | null
   rating: { value: string } | null
   ratingCount: { value: string } | null
@@ -117,6 +129,12 @@ export type ProductVariant = {
   price: Money
   compareAtPrice: Money | null
   image: Image | null
+}
+
+export type ProductAttribute = {
+  key: string
+  label: string
+  values: { label: string; color: string | null }[]
 }
 
 export type ProductDetail = {
@@ -136,6 +154,19 @@ export type ProductDetail = {
   options: ProductOption[]
   variants: ProductVariant[]
   collections: { handle: string; title: string }[]
+  /** Shopify taxonomy category name, e.g. "Automatic Feeders". */
+  category: string | null
+  /** Category metafields (Color, Material, Animal type…), values as shown in the admin. */
+  attributes: ProductAttribute[]
+  /** custom.care_instructions metafield. */
+  care: string | null
+  /** Short selling points you write in Shopify (custom.highlights metafield). */
+  highlights: string[]
+  /**
+   * Spec rows: your custom.specs lines first, then "Key: Value" specs found in the supplier
+   * description (a label you set replaces the description's), then warranty and what's in the box.
+   */
+  specs: { label: string; value: string }[]
   /** Product-specific questions (custom.faq metafield). */
   faq: { q: string; a: string }[]
   /** From a review app's standard metafields; null until the product has reviews. */

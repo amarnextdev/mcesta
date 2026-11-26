@@ -2,6 +2,7 @@ import type {
   Image,
   Money,
   ProductCard,
+  ProductAttribute,
   ProductDetail,
   ShopifyCollection,
   ShopifyImage,
@@ -9,6 +10,7 @@ import type {
   ShopifyProductCard,
   ShopifyProductDetail,
 } from "./types"
+import { buildSpecs, highlightsFromMetafield } from "./specs"
 
 export function toMoney(m: ShopifyMoney): Money {
   return { amount: Number.parseFloat(m.amount), currencyCode: m.currencyCode }
@@ -101,6 +103,16 @@ export function toProductDetail(p: ShopifyProductDetail): ProductDetail {
       }
     }),
     collections: p.collections.nodes,
+    category: p.category?.name ?? null,
+    attributes: toAttributes(p.attributes),
+    care: p.care?.value?.trim() || null,
+    highlights: highlightsFromMetafield(p.highlights?.value),
+    specs: buildSpecs({
+      custom: p.customSpecs?.value,
+      descriptionHtml: p.descriptionHtml,
+      inTheBox: p.inTheBox?.value,
+      warranty: p.warranty?.value,
+    }),
     faq: parseFaq(p.faq?.value),
     rating: parseRating(p.rating?.value, p.ratingCount?.value),
   }
@@ -129,4 +141,40 @@ function parseRating(raw: string | undefined, rawCount: string | undefined) {
   } catch {
     return null
   }
+}
+
+/** Admin label for a taxonomy attribute key. */
+const ATTRIBUTE_LABELS: Record<string, string> = {
+  "color-pattern": "Color",
+  "target-gender": "For",
+  "age-group": "Age group",
+  "animal-type": "Animal type",
+  "power-source": "Power source",
+  "connectivity-technology": "Connectivity",
+  "occasion-style": "Occasion",
+}
+
+function humanize(key: string) {
+  const s = key.replace(/-/g, " ")
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
+/** Category metafields → label + values. Reference lists use the metaobject's label; plain values pass through. */
+function toAttributes(raw: ShopifyProductDetail["attributes"]): ProductAttribute[] {
+  return (raw ?? []).flatMap((m) => {
+    if (!m) return []
+    let values: ProductAttribute["values"] = []
+    if (m.references?.nodes.length) {
+      values = m.references.nodes.flatMap((n) => (n.label?.value ? [{ label: n.label.value, color: n.color?.value ?? null }] : []))
+    } else if (!m.type.includes("reference")) {
+      try {
+        const parsed = JSON.parse(m.value) as unknown
+        const list = Array.isArray(parsed) ? parsed : [parsed]
+        values = list.flatMap((v) => (typeof v === "string" || typeof v === "number" ? [{ label: String(v), color: null }] : []))
+      } catch {
+        values = m.value ? [{ label: m.value, color: null }] : []
+      }
+    }
+    return values.length ? [{ key: m.key, label: ATTRIBUTE_LABELS[m.key] ?? humanize(m.key), values }] : []
+  })
 }

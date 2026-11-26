@@ -7,7 +7,7 @@ import { useWishlist } from "@/features/wishlist/store"
 import type { ProductCard } from "@/lib/shopify/types"
 import { cn } from "@/lib/utils"
 
-/** Heart toggle on product cards and the product page. Saves to the wishlist (this browser). */
+/** Heart toggle on product cards and the product page. Saves to the wishlist (Supabase). */
 export function WishlistButton({ product, className }: { product: ProductCard; className?: string }) {
   const { items, add, remove } = useWishlist()
   const saved = items.some((i) => i.handle === product.handle)

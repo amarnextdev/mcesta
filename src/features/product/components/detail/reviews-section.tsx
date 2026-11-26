@@ -1,9 +1,10 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { CheckIcon, MessageSquareTextIcon, StarIcon } from "lucide-react"
+import { BadgeCheckIcon, CheckIcon, MessageSquareTextIcon, StarIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import type { ProductReviews, Review } from "@/features/reviews/types"
 import { cn } from "@/lib/utils"
 
 import { submitReview } from "../../actions"
@@ -12,8 +13,35 @@ import { FormField, Honeypot, inputClass } from "./form-field"
 
 type ReviewsSectionProps = {
   productId: string
+  productHandle: string
   productTitle: string
-  rating: { value: number; count: number } | null
+  data: ProductReviews
+}
+
+// Fixed locale and time zone so the server and the browser print the same date (no hydration mismatch).
+const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })
+
+function ReviewCard({ review }: { review: Review }) {
+  return (
+    <article className="flex flex-col gap-2.5 border-b border-line pb-5 last:border-b-0">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <Stars value={review.rating} />
+        {review.title && <h3 className="text-[0.9375rem] font-bold">{review.title}</h3>}
+      </div>
+      <p className="text-[0.9375rem] leading-relaxed whitespace-pre-line text-ink/90">{review.body}</p>
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-slate">
+        <span className="font-semibold text-ink">{review.authorName}</span>
+        {review.verifiedBuyer && (
+          <span className="inline-flex items-center gap-1 font-semibold text-success">
+            <BadgeCheckIcon aria-hidden="true" className="size-4" />
+            Verified buyer
+          </span>
+        )}
+        <span aria-hidden="true">·</span>
+        <time dateTime={review.createdAt}>{dateFormat.format(new Date(review.createdAt))}</time>
+      </div>
+    </article>
+  )
 }
 
 function Stars({ value, className }: { value: number; className?: string }) {
@@ -31,7 +59,9 @@ function Stars({ value, className }: { value: number; className?: string }) {
  * or an honest "No reviews yet". The form validates on the server; reviews are checked before
  * they appear. Individual reviews will come from the review app once it's connected.
  */
-export function ReviewsSection({ productId, productTitle, rating }: ReviewsSectionProps) {
+export function ReviewsSection({ productId, productHandle, productTitle, data }: ReviewsSectionProps) {
+  const { stats, reviews } = data
+  const rating = stats ? { value: stats.average, count: stats.count } : null
   const [writing, setWriting] = useState(false)
   const [stars, setStars] = useState(0)
   const [state, action, pending] = useActionState(submitReview, idleState)
@@ -57,13 +87,19 @@ export function ReviewsSection({ productId, productTitle, rating }: ReviewsSecti
             </span>
           </div>
           <div className="flex flex-col gap-1.5" aria-hidden={!rating}>
-            {[5, 4, 3, 2, 1].map((n) => (
-              <div key={n} className="flex items-center gap-2 text-[0.8125rem] text-slate">
-                <span className="w-6">{n}★</span>
-                <span className="h-[0.4375rem] flex-1 overflow-hidden rounded-full bg-line" />
-                <span className="w-8 text-right">–</span>
-              </div>
-            ))}
+            {[5, 4, 3, 2, 1].map((n) => {
+              const count = stats?.distribution[n - 1] ?? 0
+              const pct = stats?.count ? Math.round((count / stats.count) * 100) : 0
+              return (
+                <div key={n} className="flex items-center gap-2 text-[0.8125rem] text-slate">
+                  <span className="w-6">{n}★</span>
+                  <span className="h-[0.4375rem] flex-1 overflow-hidden rounded-full bg-line">
+                    <span className="block h-full rounded-full bg-star" style={{ width: `${pct}%` }} />
+                  </span>
+                  <span className="w-8 text-right tabular-nums">{stats ? count : "–"}</span>
+                </div>
+              )
+            })}
           </div>
           <div className="mt-2 flex flex-col gap-2 border-t border-line pt-4">
             <span className="text-base font-bold">Own this product?</span>
@@ -97,6 +133,7 @@ export function ReviewsSection({ productId, productTitle, rating }: ReviewsSecti
             <form action={action} className="flex flex-col gap-3.5 rounded-2xl border-[1.5px] border-teal bg-white p-5">
               <span className="text-[1.0625rem] font-bold">Review {productTitle}</span>
               <input type="hidden" name="productId" value={productId} />
+              <input type="hidden" name="productHandle" value={productHandle} />
               <input type="hidden" name="rating" value={stars} />
               <Honeypot />
 
@@ -145,6 +182,11 @@ export function ReviewsSection({ productId, productTitle, rating }: ReviewsSecti
                 </FormField>
               </div>
 
+              {state.status === "error" && !state.fields && (
+                <p role="alert" className="rounded-lg bg-terra-soft px-3 py-2 text-[0.8125rem] font-semibold text-terra-text">
+                  {state.message}
+                </p>
+              )}
               <div className="flex justify-end gap-2.5">
                 <Button type="button" variant="ghost" onClick={() => setWriting(false)} className="h-11 text-slate">
                   Cancel
@@ -154,6 +196,12 @@ export function ReviewsSection({ productId, productTitle, rating }: ReviewsSecti
                 </Button>
               </div>
             </form>
+          ) : reviews.length > 0 ? (
+            <div className="flex flex-col gap-5">
+              {reviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))}
+            </div>
           ) : (
             <div className="flex flex-col items-center gap-3 rounded-2xl border-[1.5px] border-dashed border-teal-line bg-teal-tint px-6 py-12 text-center">
               <span aria-hidden="true" className="grid size-12 place-items-center rounded-full bg-white text-teal">

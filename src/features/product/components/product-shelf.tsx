@@ -5,6 +5,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { FilterChipsStatic } from "@/components/shared/filter-chips-static"
 import { SectionHeader } from "@/components/shared/section-header"
 import { ProductGridSkeleton } from "@/components/skeletons/product-card-skeleton"
+import { getCountry } from "@/lib/market/market.server"
 import { makeQueryClient } from "@/lib/query/query-client"
 import { cn } from "@/lib/utils"
 
@@ -16,13 +17,16 @@ import { ProductShelfBody } from "./product-shelf-body"
 async function ShelfData({ config }: { config: ShelfConfig }) {
   // Hydration stamps the time, so this part renders per request; the data itself is cached.
   await connection()
-  const params = config.filters[0]?.params ?? {}
+  const country = await getCountry()
+  const params = { ...config.filters[0]?.params, country }
   const queryClient = makeQueryClient()
-  void queryClient.prefetchQuery({ ...productQueries.list(params), queryFn: () => getProducts(params) })
+  // Wait for the data (this part streams in behind its Suspense skeleton), so the server HTML
+  // and the browser's first render both start from the same finished result.
+  await queryClient.prefetchQuery({ ...productQueries.list(params), queryFn: () => getProducts(params) })
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductShelfBody config={config} />
+      <ProductShelfBody config={config} country={country} />
     </HydrationBoundary>
   )
 }

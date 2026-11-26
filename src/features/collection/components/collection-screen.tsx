@@ -5,7 +5,7 @@ import type { ReactNode } from "react"
 
 import { Breadcrumb, type Crumb } from "@/components/shared/breadcrumb"
 import { EmptyState } from "@/components/shared/empty-state"
-import { isMockShop } from "@/lib/config/env"
+import { getCountry } from "@/lib/market/market.server"
 import { makeQueryClient } from "@/lib/query/query-client"
 
 import { getCollectionPage } from "../api.server"
@@ -48,18 +48,11 @@ export async function CollectionScreen({
   // The Storefront data itself is still cached ("use cache" in getCollectionPage).
   await connection()
 
-  let source = handle
-  let query = parseCollectionParams(source, searchParams)
-  let data = await getCollectionPage(query)
+  const country = await getCountry()
+  const query = parseCollectionParams(handle, searchParams, country)
+  const data = await getCollectionPage(query)
 
-  // Demo store only: our menu collections don't exist on mock.shop, so show its products
-  // to make the page testable. With a real store a missing collection shows "on their way".
-  if (!data && allowMissing && isMockShop) {
-    source = ALL_PRODUCTS_HANDLE
-    query = parseCollectionParams(source, searchParams)
-    data = await getCollectionPage(query)
-  }
-
+  // A menu collection that isn't set up in Shopify yet shows "on their way" instead of a 404.
   if (!data) {
     if (!allowMissing) notFound()
     return (
@@ -90,7 +83,8 @@ export async function CollectionScreen({
       {intro}
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CollectionView
-          handle={source}
+          handle={handle}
+          country={country}
           parents={parents}
           title={title}
         />

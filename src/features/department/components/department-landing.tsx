@@ -3,12 +3,10 @@ import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
 import { categoryIcons } from "@/components/layout/category-icons"
-import { getCollectionImages } from "@/features/collection/api.server"
-import { departmentAllHref, type Department } from "@/lib/config/navigation"
+import { departmentAllHref, type Department } from "@/lib/navigation"
 import type { Image as ImageData } from "@/lib/shopify/types"
-import { cn } from "@/lib/utils"
 
-import { departmentBanners, departmentShopFor, departmentTiles } from "../data"
+import { departmentBanners, departmentTiles } from "../data"
 import { BannerRail } from "./banner-rail"
 
 const tints = ["#EFE6D8", "#E3EFEC", "#F7E3D8", "#E4E9EC", "#F3EEE6"]
@@ -20,22 +18,17 @@ function Tile({
   image,
   index,
   icon: Icon,
-  size,
 }: {
   label: string
   href: string
-  image?: ImageData
+  image: ImageData | null
   index: number
   icon: (typeof categoryIcons)[keyof typeof categoryIcons]
-  size: "lg" | "sm"
 }) {
   return (
     <Link href={href} className="group flex flex-col gap-2.5">
       <span
-        className={cn(
-          "relative grid place-items-center overflow-hidden rounded-2xl ring-1 ring-ink/5 transition-[box-shadow,transform] duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_24px_-10px_rgba(31,42,46,0.25)]",
-          size === "lg" ? "aspect-[4/3]" : "aspect-square"
-        )}
+        className="relative grid aspect-square place-items-center overflow-hidden rounded-2xl ring-1 ring-ink/5 transition-[box-shadow,transform] duration-300 group-hover:-translate-y-0.5 group-hover:shadow-[0_10px_24px_-10px_rgba(31,42,46,0.25)]"
         style={{ background: tints[index % tints.length] }}
       >
         {image ? (
@@ -43,7 +36,7 @@ function Tile({
             src={image.url}
             alt=""
             fill
-            sizes={size === "lg" ? "(min-width: 768px) 260px, 33vw" : "(min-width: 768px) 140px, 30vw"}
+            sizes="(min-width: 768px) 140px, 30vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -52,7 +45,7 @@ function Tile({
           </span>
         )}
       </span>
-      <span className={cn("text-center leading-tight text-ink group-hover:text-teal", size === "lg" ? "text-base font-semibold" : "text-[0.8125rem] font-medium")}>
+      <span className="text-center text-[0.8125rem] leading-tight font-medium text-ink group-hover:text-teal">
         {label}
       </span>
     </Link>
@@ -63,10 +56,8 @@ function Tile({
  * Department front page (/gifts, /kitchen …): title, offers, "shop for" tiles and a tile per
  * category. The full product list with filters lives at /{department}/all.
  */
-export async function DepartmentLanding({ department }: { department: Department }) {
-  const images = await getCollectionImages()
+export function DepartmentLanding({ department }: { department: Department }) {
   const banners = departmentBanners(department)
-  const shopFor = departmentShopFor(department)
   const links = departmentTiles(department)
   const Icon = categoryIcons[department.icon]
   const allHref = departmentAllHref(department)
@@ -77,21 +68,6 @@ export async function DepartmentLanding({ department }: { department: Department
       <h1 className="sr-only">{department.label}</h1>
 
       <BannerRail banners={banners} label={`${department.label} offers`} />
-
-      {shopFor.length > 0 && (
-        <section aria-labelledby="dept-for-h" className="flex flex-col gap-4">
-          <h2 id="dept-for-h" className="text-[1.25rem] leading-tight md:text-[1.375rem]">
-            Shop {department.label} for
-          </h2>
-          <ul className="grid grid-cols-3 gap-3 md:max-w-[820px] md:gap-5">
-            {shopFor.map((item, i) => (
-              <li key={item.href}>
-                <Tile label={item.label} href={item.href} image={images.get(item.collection)} index={i} icon={Icon} size="lg" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       <section aria-labelledby="dept-cats-h" className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
@@ -106,7 +82,7 @@ export async function DepartmentLanding({ department }: { department: Department
         <ul className="grid grid-cols-3 gap-x-3 gap-y-5 sm:grid-cols-4 md:grid-cols-[repeat(auto-fill,minmax(128px,1fr))] md:gap-x-5 md:gap-y-6">
           {links.map((link, i) => (
             <li key={link.href}>
-              <Tile label={link.label} href={link.href} image={images.get(link.collection)} index={i} icon={Icon} size="sm" />
+              <Tile label={link.label} href={link.href} image={link.image} index={i} icon={Icon} />
             </li>
           ))}
         </ul>

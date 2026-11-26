@@ -3,10 +3,22 @@
 import { z } from "zod"
 
 import { getBoughtTogether } from "@/features/product/detail.server"
+import { getCountry } from "@/lib/market/market.server"
 import type { Cart } from "@/lib/shopify/cart"
 import type { ProductCard } from "@/lib/shopify/types"
 
-import { addLines, CartError, createCart, getCart, removeLine, setDiscountCodes, setNote, updateLine } from "./cart.server"
+import {
+  addLines,
+  CartError,
+  createCart,
+  getCart,
+  getSavedVariants,
+  removeLine,
+  setDiscountCodes,
+  setNote,
+  updateLine,
+  type SavedVariant,
+} from "./cart.server"
 import { MAX_QUANTITY } from "./config"
 
 /*
@@ -83,9 +95,27 @@ export async function buyNowAction(lines: { merchandiseId: string; quantity: num
 /** "Complete the set" in the cart drawer: add-ons for a product, minus what's already in the cart. */
 export async function cartUpsellAction(productId: string, exclude: string[]): Promise<ProductCard | null> {
   try {
-    const list = await getBoughtTogether(gid.parse(productId))
+    const list = await getBoughtTogether(gid.parse(productId), await getCountry())
     return list.find((p) => !exclude.includes(p.id)) ?? null
   } catch {
     return null
+  }
+}
+
+const VARIANT_GID = /^gid:\/\/shopify\/ProductVariant\/\d+$/
+
+/**
+ * "Saved for later": live price and stock for the saved variants. `requested` tells the browser
+ * which ids were checked, so ones missing from `items` (deleted, or not real) can be dropped.
+ */
+export async function savedForLaterAction(ids: string[]): Promise<{ requested: string[]; items: SavedVariant[] }> {
+  const requested = ids.slice(0, 50)
+  const valid = requested.filter((id) => typeof id === "string" && VARIANT_GID.test(id))
+  try {
+    return { requested, items: await getSavedVariants(valid) }
+  } catch (error) {
+    console.error("[cart] saved for later failed", error)
+    // Network trouble: drop nothing, show the stored copies.
+    return { requested: [], items: [] }
   }
 }

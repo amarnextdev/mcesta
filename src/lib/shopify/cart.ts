@@ -159,6 +159,19 @@ export const CART_DISCOUNT_CODES_UPDATE = /* GraphQL */ `
   ${CART_FRAGMENT}
 `
 
+/** Moves the cart to another country: prices, currency and stock follow that market. */
+export const CART_BUYER_IDENTITY_UPDATE = /* GraphQL */ `
+  mutation CartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+    cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+      cart {
+        ...CartInfo
+      }
+      ${USER_ERRORS}
+    }
+  }
+  ${CART_FRAGMENT}
+`
+
 export const CART_NOTE_UPDATE = /* GraphQL */ `
   mutation CartNoteUpdate($cartId: ID!, $note: String!) {
     cartNoteUpdate(cartId: $cartId, note: $note) {

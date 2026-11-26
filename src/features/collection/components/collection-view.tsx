@@ -30,16 +30,21 @@ import { SortMenu } from "./sort-menu"
 type CollectionViewProps = {
   /** Shopify collection handle. The URL may differ (/{department}/{category}). */
   handle: string
+  /** Shopper's market, from the server (same value the first page was loaded with). */
+  country: string
   /** Breadcrumb trail above the current page, e.g. Home › Electronics. */
   parents: Crumb[]
   /** Page title from the menu. Falls back to the Shopify collection title. */
   title?: string
 }
 
-export function CollectionView({ handle, parents, title: menuTitle }: CollectionViewProps) {
+export function CollectionView({ handle, country, parents, title: menuTitle }: CollectionViewProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const params = useMemo(() => parseCollectionParams(handle, searchParams), [handle, searchParams])
+  const params = useMemo(
+    () => parseCollectionParams(handle, searchParams, country),
+    [handle, searchParams, country]
+  )
 
   const { data, isPending, isError, isPlaceholderData, isFetching, refetch } = useQuery({
     ...collectionQueries.page(params),

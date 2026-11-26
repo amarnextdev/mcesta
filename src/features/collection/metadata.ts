@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 
+import { DEFAULT_COUNTRY } from "@/lib/market/countries"
+
 import { getCollectionPage } from "./api.server"
 import { DEFAULT_SORT, DEFAULT_TAB } from "./config"
 
@@ -12,7 +14,8 @@ export async function collectionMetadata(
   handle: string,
   { canonical, fallbackTitle }: { canonical: string; fallbackTitle?: string }
 ): Promise<Metadata> {
-  const data = await getCollectionPage({ handle, sort: DEFAULT_SORT, tab: DEFAULT_TAB, filters: [], page: 1 })
+  const data = await getCollectionPage({ handle, sort: DEFAULT_SORT, tab: DEFAULT_TAB, filters: [], page: 1, country: DEFAULT_COUNTRY })
+  // SEO text is the same in every market, so metadata always reads the default one.
 
   if (!data) {
     if (!fallbackTitle) return { title: "Collection not found", robots: { index: false } }

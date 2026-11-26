@@ -1,4 +1,4 @@
-import { QueryClient, defaultShouldDehydrateQuery } from "@tanstack/react-query"
+import { QueryClient } from "@tanstack/react-query"
 
 /** Shared defaults for every QueryClient (server render and browser). */
 export function makeQueryClient() {
@@ -9,11 +9,6 @@ export function makeQueryClient() {
         staleTime: 60_000,
         refetchOnWindowFocus: false,
         retry: 1,
-      },
-      dehydrate: {
-        // Stream queries that are still loading from Server Components to the client.
-        shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) || query.state.status === "pending",
       },
     },
   })

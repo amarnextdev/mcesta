@@ -1,4 +1,4 @@
-import { isMockShop, publicEnv } from "@/lib/config/env"
+import { publicEnv } from "@/lib/config/env"
 
 /** Thrown for HTTP failures and GraphQL `errors`. */
 export class ShopifyError extends Error {
@@ -20,17 +20,14 @@ export type StorefrontRequest<TVariables> = {
   headers?: Record<string, string>
 }
 
-/** GraphQL endpoint: the real store when configured, otherwise mock.shop. */
+/** The store's Storefront GraphQL endpoint. */
 export function storefrontEndpoint(): string {
-  if (isMockShop) return publicEnv.NEXT_PUBLIC_MOCK_SHOP_URL
   const domain = publicEnv.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN
   return `https://${domain}/api/${publicEnv.NEXT_PUBLIC_SHOPIFY_API_VERSION}/graphql.json`
 }
 
 function publicHeaders(): Record<string, string> {
-  // mock.shop accepts the literal token "public" (needed for metafields).
-  const token = isMockShop ? "public" : publicEnv.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN
-  return token ? { "X-Shopify-Storefront-Access-Token": token } : {}
+  return { "X-Shopify-Storefront-Access-Token": publicEnv.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN }
 }
 
 /**

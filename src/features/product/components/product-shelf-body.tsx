@@ -17,10 +17,10 @@ import { ProductGrid } from "./product-grid"
  * Client part of a shelf: filter chips + the product row.
  * The default filter is already in the cache (prefetched on the server); other filters fetch on click.
  */
-export function ProductShelfBody({ config }: { config: ShelfConfig }) {
+export function ProductShelfBody({ config, country }: { config: ShelfConfig; country: string }) {
   const [active, setActive] = useState(config.filters[0]?.key ?? "all")
   const filter = config.filters.find((f) => f.key === active) ?? config.filters[0]
-  const params = filter?.params ?? {}
+  const params = { ...filter?.params, country }
 
   const { data, isPending, isFetching, isError, refetch } = useQuery({
     ...productQueries.list(params),

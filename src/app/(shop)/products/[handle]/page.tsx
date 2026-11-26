@@ -12,16 +12,27 @@ import { ReviewsSection } from "@/features/product/components/detail/reviews-sec
 import { ProductRecommendations } from "@/features/product/components/detail/product-recommendations"
 import { RecordView } from "@/features/product/components/record-view"
 import { RecentlyViewedSection } from "@/features/product/components/recently-viewed-section"
+import { getAnsweredQuestions, getProductReviews } from "@/features/reviews/reviews.server"
 import { defaultVariant, productToCard } from "@/features/product/variants"
 import { storeFaq } from "@/lib/config/faq"
+import { DEFAULT_COUNTRY } from "@/lib/market/countries"
+import { getCountry } from "@/lib/market/market.server"
 import { siteConfig } from "@/lib/config/site"
-import { categoryHref, departmentAllHref, menuPlaceOfCollection } from "@/lib/config/navigation"
+import {
+  categoryHref,
+  departmentAllHref,
+  menuPlaceOfCollection,
+  subcategoryHref,
+  type Department,
+} from "@/lib/navigation"
+import { getDepartments } from "@/lib/navigation/navigation.server"
 import type { ProductDetail } from "@/lib/shopify/types"
 
 type Props = PageProps<"/products/[handle]">
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProduct((await params).handle)
+  // Title and description don't change per market: read the default one (no cookies needed).
+  const product = await getProduct((await params).handle, DEFAULT_COUNTRY)
   if (!product) return { title: "Product not found", robots: { index: false } }
   const image = product.images[0]
   return {
@@ -37,13 +48,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-/** Breadcrumb from the first of the product's collections that sits in the menu. */
-function placeOf(product: ProductDetail) {
+/**
+ * Breadcrumb from the product's collections: the deepest menu place wins
+ * (Home Decor → Lighting → Night lights beats Home Decor → Lighting).
+ */
+function placeOf(product: ProductDetail, departments: Department[]) {
+  const depth = (p: NonNullable<ReturnType<typeof menuPlaceOfCollection>>) =>
+    p.subcategory ? 3 : p.category ? 2 : 1
+  let best: ReturnType<typeof menuPlaceOfCollection> = null
   for (const c of product.collections) {
-    const place = menuPlaceOfCollection(c.handle)
-    if (place) return place
+    const place = menuPlaceOfCollection(departments, c.handle)
+    if (place && (!best || depth(place) > depth(best))) best = place
   }
-  return null
+  return best
 }
 
 /** Product structured data so search engines can show price and stock. */
@@ -56,6 +73,9 @@ function ProductJsonLd({ product }: { product: ProductDetail }) {
     description: product.description,
     image: product.images.map((i) => i.url),
     brand: product.vendor ? { "@type": "Brand", name: product.vendor } : undefined,
+    aggregateRating: product.rating
+      ? { "@type": "AggregateRating", ratingValue: product.rating.value, reviewCount: product.rating.count }
+      : undefined,
     offers: product.variants.map((v) => ({
       "@type": "Offer",
       price: v.price.amount.toFixed(2),
@@ -75,10 +95,19 @@ function ProductJsonLd({ product }: { product: ProductDetail }) {
 }
 
 async function ProductContent({ params }: Pick<Props, "params">) {
-  const product = await getProduct((await params).handle)
+  const [{ handle }, country] = await Promise.all([params, getCountry()])
+  const product = await getProduct(handle, country)
   if (!product) notFound()
 
-  const place = placeOf(product)
+  const [departments, reviews, answered] = await Promise.all([
+    getDepartments(),
+    getProductReviews(product.id),
+    getAnsweredQuestions(product.id),
+  ])
+  const place = placeOf(product, departments)
+  // Supabase reviews decide the rating; fall back to a review-app metafield if there is one.
+  const rating = reviews.stats ? { value: reviews.stats.average, count: reviews.stats.count } : product.rating
+  const productWithRating = { ...product, rating }
   const crumbs: Crumb[] = [{ label: "Home", href: "/" }]
   let category: { label: string; href: string } | null = null
   if (place) {
@@ -86,6 +115,13 @@ async function ProductContent({ params }: Pick<Props, "params">) {
     if (place.category) {
       category = { label: place.category.label, href: categoryHref(place.department, place.category) }
       crumbs.push(category)
+      if (place.subcategory) {
+        category = {
+          label: place.subcategory.label,
+          href: subcategoryHref(place.department, place.category, place.subcategory),
+        }
+        crumbs.push(category)
+      }
     } else {
       category = { label: place.department.label, href: departmentAllHref(place.department) }
     }
@@ -95,11 +131,11 @@ async function ProductContent({ params }: Pick<Props, "params">) {
 
   return (
     <>
-      <ProductJsonLd product={product} />
+      <ProductJsonLd product={productWithRating} />
       {card && <RecordView product={card} />}
       <div className="container-shop flex flex-col gap-4 pt-4 pb-14">
         <Breadcrumb items={crumbs} />
-        <ProductView product={product} category={category} />
+        <ProductView product={productWithRating} category={category} country={country} />
       </div>
       <Suspense
         fallback={
@@ -110,11 +146,16 @@ async function ProductContent({ params }: Pick<Props, "params">) {
       >
         <ProductRecommendations
           product={product}
+          country={country}
           seeAll={category ? { label: `See all ${category.label}`, href: category.href } : undefined}
         />
       </Suspense>
-      <ReviewsSection productId={product.id} productTitle={product.title} rating={product.rating} />
-      <ProductFaq productId={product.id} items={[...product.faq, ...storeFaq]} />
+      <ReviewsSection productId={product.id} productHandle={product.handle} productTitle={product.title} data={reviews} />
+      <ProductFaq
+        productId={product.id}
+        productHandle={product.handle}
+        items={[...answered.map((q) => ({ q: q.question, a: q.answer })), ...product.faq, ...storeFaq]}
+      />
       <RecentlyViewedSection exclude={[product.handle]} className="pb-16" />
     </>
   )

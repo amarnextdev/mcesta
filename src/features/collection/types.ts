@@ -18,6 +18,8 @@ export type CollectionParams = {
   filters: FilterInput[]
   /** 1-based page number. Turned into a Shopify cursor with the cursor index (see api.ts). */
   page: number
+  /** Market for prices, currency and stock (ISO code). Not in the URL: it comes from the shopper's choice. */
+  country: string
 }
 
 export type CollectionPage = {

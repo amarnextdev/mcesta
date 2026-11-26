@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ChevronDownIcon } from "lucide-react"
 
-import type { CategoryIcon } from "@/lib/config/navigation"
+import type { CategoryIcon } from "@/lib/navigation"
 import { cn } from "@/lib/utils"
 
 import { categoryIcons } from "./category-icons"
@@ -67,10 +67,13 @@ export function TabLink({ label, href, icon, highlight, muted, hasMenu, active, 
 export type CategoryTabProps = Omit<TabLinkProps, "active" | "display" | "hasMenu"> & {
   /** Where the item goes on product-list pages (e.g. /beauty/all), with a ▾ dropdown. */
   listingHref?: string
+  /** Department tabs: collection handles that count as "inside" it (for /collections/{handle}). */
+  handles?: string[]
 }
 
 /** Two links when needed: landing page normally, product list on list pages (switched by CSS). */
-export function TabLinks({ listingHref, active, ...tab }: CategoryTabProps & { active: boolean }) {
+export function TabLinks({ listingHref, active, handles, ...tab }: CategoryTabProps & { active: boolean }) {
+  void handles // only ActiveTabs needs it, to work out `active`
   if (!listingHref) return <TabLink {...tab} active={active} />
   return (
     <>

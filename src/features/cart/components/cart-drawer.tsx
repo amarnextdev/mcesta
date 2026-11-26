@@ -12,7 +12,7 @@ import type { Cart, CartLine } from "@/lib/shopify/cart"
 import { cn } from "@/lib/utils"
 
 import { cartUpsellAction } from "../actions"
-import { FREE_SHIPPING_THRESHOLD, MAX_QUANTITY } from "../config"
+import { CHECKOUT_PATH, hasFreeShipping, MAX_QUANTITY } from "../config"
 import { cartDrawer, useCartDrawerOpen } from "../drawer-store"
 import { useAddToCart, useCart, useRemoveLine, useUpdateLine } from "../hooks"
 import { FreeShippingBar } from "./free-shipping-bar"
@@ -210,7 +210,7 @@ function DrawerFooter({ cart }: { cart: Cart }) {
   const savings =
     cart.lines.reduce((sum, l) => sum + (l.compareAtPrice ? (l.compareAtPrice.amount - l.price.amount) * l.quantity : 0), 0) +
     cart.codeSavings.amount
-  const freeShipping = cart.subtotal.amount >= FREE_SHIPPING_THRESHOLD
+  const freeShipping = hasFreeShipping(cart.subtotal)
   const blocked = cart.lines.some((l) => !l.available)
   const button = "inline-flex h-[3.25rem] items-center justify-center gap-2 rounded-xl text-[0.9375rem] font-bold transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
 
@@ -252,7 +252,7 @@ function DrawerFooter({ cart }: { cart: Cart }) {
             Remove sold-out items
           </span>
         ) : (
-          <a href={cart.checkoutUrl} className={cn(button, "bg-teal text-cream shadow-[0_6px_16px_-6px_rgba(31,92,90,0.6)] hover:bg-teal/90")}>
+          <a href={CHECKOUT_PATH} className={cn(button, "bg-teal text-cream shadow-[0_6px_16px_-6px_rgba(31,92,90,0.6)] hover:bg-teal/90")}>
             <LockIcon aria-hidden="true" className="size-[18px]" />
             Checkout
           </a>

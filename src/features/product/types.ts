@@ -6,6 +6,8 @@ export type ProductListParams = {
   reverse?: boolean
   /** Shopify search syntax, e.g. "tag:gift" or "product_type:Lamp". */
   query?: string
+  /** Market for prices, currency and stock (ISO code). Part of the query key. */
+  country?: string
 }
 
 export type ShelfFilter = { key: string; label: string; params: ProductListParams }

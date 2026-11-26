@@ -5,17 +5,18 @@ import { Suspense } from "react"
 import { PageType } from "@/components/layout/page-type"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DepartmentLanding } from "@/features/department/components/department-landing"
-import { departmentHref, departments, getDepartment } from "@/lib/config/navigation"
+import { departmentHref, getDepartment } from "@/lib/navigation"
+import { getDepartments } from "@/lib/navigation/navigation.server"
 
 type Props = PageProps<"/[department]">
 
 /** Prerender every department from the menu. Any other top-level slug is a 404. */
-export function generateStaticParams() {
-  return departments.map((d) => ({ department: d.slug }))
+export async function generateStaticParams() {
+  return (await getDepartments()).map((d) => ({ department: d.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const department = getDepartment((await params).department)
+  const department = getDepartment(await getDepartments(), (await params).department)
   if (!department) return { title: "Page not found", robots: { index: false } }
   return {
     title: department.label,
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function DepartmentContent({ params }: Pick<Props, "params">) {
-  const department = getDepartment((await params).department)
+  const department = getDepartment(await getDepartments(), (await params).department)
   if (!department) notFound()
   return <DepartmentLanding department={department} />
 }

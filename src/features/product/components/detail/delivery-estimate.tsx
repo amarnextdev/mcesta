@@ -1,148 +1,228 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState, type FormEvent } from "react"
-import { CheckIcon, MapPinIcon, PackageIcon, ShoppingBagIcon, TruckIcon } from "lucide-react"
+import { CheckIcon, Loader2Icon, MapPinIcon, PackageIcon, RouteIcon, TruckIcon, XCircleIcon } from "lucide-react"
 
+import { freeShippingThreshold } from "@/features/cart/config"
+import { useDeliveryWindow } from "@/lib/delivery"
+import { formatMoney } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
-/** Business days: order handling and carrier transit (keep in line with the shipping policy). */
-const HANDLING = [1, 2] as const
-const TRANSIT = [3, 7] as const
+import { checkDeliveryAction } from "../../actions"
+import { normalizePostal, postalRule } from "../../delivery-check"
 
-function addBusinessDays(from: Date, days: number) {
-  const date = new Date(from)
-  let left = days
-  while (left > 0) {
-    date.setDate(date.getDate() + 1)
-    const day = date.getDay()
-    if (day !== 0 && day !== 6) left--
-  }
-  return date
+/** Last checked code per country, so every product page checks it straight away. */
+const storageKey = (country: string) => `mcesta:postal:${country}`
+
+type Props = {
+  /** Variant being viewed: rates and availability can differ per item. */
+  variantId?: string
+  /** Shopper's market (ISO code): decides ZIP vs PIN vs postcode. */
+  country: string
+  currencyCode?: string
 }
 
-const fmt = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
-
 /**
- * Delivery box (design): optional ZIP, then Order today → Ships → Arrives.
- * Dates are an estimate from handling + transit times; carrier rates come from Shopify checkout.
+ * Delivery box: check a ZIP / PIN / postcode against Shopify's real shipping rates (can we
+ * deliver there, and what it costs), then Order today → Ships → Arrives.
  */
-export function DeliveryEstimate() {
-  const [zip, setZip] = useState("")
-  const [saved, setSaved] = useState<string | null>(null)
-  const [error, setError] = useState(false)
+export function DeliveryEstimate({ variantId, country, currencyCode }: Props) {
+  const rule = postalRule(country)
+  const dates = useDeliveryWindow()
+  const threshold = currencyCode ? freeShippingThreshold(currencyCode) : null
 
-  // Dates use the shopper's own clock and time zone, so they're worked out in the browser.
-  const [dates, setDates] = useState<{ today: string; ships: string; arrives: string } | null>(null)
+  const [input, setInput] = useState("")
+  const [code, setCode] = useState<string | null>(null)
+  const [formError, setFormError] = useState<string | null>(null)
+
+  // Saved code is read after mount (localStorage), so server and browser HTML match.
   useEffect(() => {
-    const today = new Date()
-    setDates({
-      today: fmt(today),
-      ships: `${fmt(addBusinessDays(today, HANDLING[0]))}–${fmt(addBusinessDays(today, HANDLING[1]))}`,
-      arrives: `${fmt(addBusinessDays(today, HANDLING[0] + TRANSIT[0]))}–${fmt(addBusinessDays(today, HANDLING[1] + TRANSIT[1]))}`,
-    })
-  }, [])
+    try {
+      const saved = window.localStorage.getItem(storageKey(country))
+      if (saved) setCode(saved)
+    } catch {
+      // Storage blocked: the shopper just types it again.
+    }
+  }, [country])
 
-  function check(event: FormEvent) {
+  const check = useQuery({
+    queryKey: ["delivery-check", country, variantId, code],
+    queryFn: () => checkDeliveryAction(variantId!, code!),
+    enabled: Boolean(variantId && code),
+    staleTime: 10 * 60_000,
+  })
+  const result = check.data
+
+  // A code Shopify or the lookup rejected goes back into the field with the message.
+  useEffect(() => {
+    if (result?.status !== "invalid") return
+    setFormError(result.message)
+    setInput(code ?? "")
+    setCode(null)
+    try {
+      window.localStorage.removeItem(storageKey(country))
+    } catch {}
+  }, [result, code, country])
+
+  function submit(event: FormEvent) {
     event.preventDefault()
-    if (!/^\d{5}$/.test(zip)) return setError(true)
-    setError(false)
-    setSaved(zip)
+    const value = normalizePostal(input)
+    if (!rule.pattern.test(value)) return setFormError(rule.hint)
+    setFormError(null)
+    setCode(value)
+    try {
+      window.localStorage.setItem(storageKey(country), value)
+    } catch {}
   }
 
-  const steps = [
-    { icon: ShoppingBagIcon, label: "Order today", value: dates?.today, strong: false },
-    { icon: PackageIcon, label: "Ships", value: dates?.ships ?? "1–2 business days", strong: false },
-    { icon: TruckIcon, label: "Arrives", value: dates?.arrives ?? "3–7 business days", strong: true },
+  function change() {
+    setInput(code ?? "")
+    setCode(null)
+  }
+
+  const unavailable = result?.status === "unavailable"
+  const cheapest = result?.status === "ok" ? result.options[0] : undefined
+  const arrives = dates?.arrives ?? "4–9 business days"
+  // Shipping-only perks here; damage/returns promises sit in "Shop with peace of mind" (no repeats).
+  const perks = [
+    threshold !== null && currencyCode
+      ? { icon: PackageIcon, title: "Free shipping", sub: `on orders over ${formatMoney({ amount: threshold, currencyCode })}` }
+      : { icon: PackageIcon, title: "Ships fast", sub: "within 1–2 business days" },
+    { icon: RouteIcon, title: "Tracked delivery", sub: "tracking link by email" },
   ]
 
   return (
-    <section aria-labelledby="delivery-h" className="overflow-hidden rounded-2xl border-2 border-dashed border-teal bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-dashed border-teal-line bg-teal-soft px-[18px] py-3.5">
-        <h2 id="delivery-h" className="inline-flex items-center gap-2.5 font-sans text-base font-bold">
-          <TruckIcon aria-hidden="true" className="size-5 text-teal" />
-          Delivery
-        </h2>
-        <span className="text-[0.8125rem] text-slate">Ships to all 50 US states</span>
+    <section aria-labelledby="delivery-h" className="flex flex-col gap-3.5 rounded-2xl border-[1.5px] border-dashed border-teal bg-teal-tint p-4 sm:p-[18px]">
+      <div className="flex items-center gap-3">
+        <span aria-hidden="true" className="grid size-10 flex-none place-items-center rounded-full bg-teal-soft text-teal">
+          <TruckIcon className="size-5" strokeWidth={1.9} />
+        </span>
+        <div className="flex flex-col leading-tight">
+          <h2 id="delivery-h" className="font-sans text-base font-bold">
+            Get estimated delivery date
+          </h2>
+          <p className="text-[0.8125rem] text-slate">Enter your {rule.label} to check delivery and shipping cost</p>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 p-[18px]">
-        {saved ? (
-          <div className="flex items-center gap-2.5 rounded-xl bg-success-soft px-3 py-2.5">
-            <span aria-hidden="true" className="grid size-6 flex-none place-items-center rounded-full bg-success text-white">
-              <CheckIcon className="size-3.5" strokeWidth={3} />
+      {code ? (
+        <div
+          aria-live="polite"
+          className={cn(
+            "flex items-center gap-3 rounded-xl border bg-white px-3.5 py-3 text-sm",
+            unavailable ? "border-terra-light" : "border-teal-line"
+          )}
+        >
+          {check.isFetching ? (
+            <Loader2Icon aria-hidden="true" className="size-5 flex-none animate-spin text-teal" />
+          ) : unavailable ? (
+            <XCircleIcon aria-hidden="true" className="size-5 flex-none text-terra-text" />
+          ) : result?.status === "ok" ? (
+            <span aria-hidden="true" className="grid size-5 flex-none place-items-center rounded-full bg-success text-white">
+              <CheckIcon className="size-3" strokeWidth={3} />
             </span>
-            <span className="flex-1 text-sm">
-              Delivering to <span className="font-bold">ZIP {saved}</span>
-            </span>
-            <button type="button" onClick={() => setSaved(null)} className="text-sm font-semibold text-teal underline underline-offset-2">
-              Change
+          ) : (
+            <MapPinIcon aria-hidden="true" className="size-5 flex-none text-slate" />
+          )}
+          <span className="flex min-w-0 flex-1 flex-col leading-snug">
+            {check.isFetching ? (
+              <span>Checking delivery to {code}…</span>
+            ) : result?.status === "ok" ? (
+              <>
+                <span>
+                  Delivery by <span className="font-bold text-teal">{arrives}</span>
+                </span>
+                <span className="text-[0.8125rem] text-slate">
+                  {result.place ? `${result.place} ${code}` : code}
+                  {cheapest && (
+                    <>
+                      {" · "}
+                      {cheapest.cost.amount === 0 ? (
+                        <span className="font-semibold text-success">Free shipping</span>
+                      ) : (
+                        `${cheapest.title} ${formatMoney(cheapest.cost)}`
+                      )}
+                    </>
+                  )}
+                </span>
+              </>
+            ) : unavailable ? (
+              <>
+                <span className="font-bold text-terra-text">Not deliverable to {code}</span>
+                <span className="text-[0.8125rem] text-slate">We can&apos;t ship this item there yet. Try another {rule.label}.</span>
+              </>
+            ) : result?.status === "error" ? (
+              <span className="text-slate">{result.message}</span>
+            ) : (
+              <span>{code}</span>
+            )}
+          </span>
+          <button type="button" onClick={change} className="flex-none text-[0.8125rem] font-semibold text-teal hover:underline">
+            Change
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={submit} noValidate className="flex flex-col gap-1">
+          <label htmlFor="pdp-postal" className="sr-only">
+            Your {rule.label}
+          </label>
+          <div
+            className={cn(
+              "flex h-12 items-center rounded-xl border bg-white pr-1.5 pl-3.5 transition-shadow focus-within:ring-3 focus-within:ring-ring/40",
+              formError ? "border-[#a33a1f]" : "border-teal-line focus-within:border-teal"
+            )}
+          >
+            <MapPinIcon aria-hidden="true" className="size-5 flex-none text-teal" />
+            <input
+              id="pdp-postal"
+              inputMode={country === "US" || country === "IN" ? "numeric" : "text"}
+              maxLength={10}
+              autoComplete="postal-code"
+              placeholder={rule.placeholder}
+              value={input}
+              aria-invalid={formError ? true : undefined}
+              aria-describedby={formError ? "pdp-postal-error" : undefined}
+              onChange={(e) => {
+                setInput(e.target.value)
+                setFormError(null)
+              }}
+              className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-base font-medium tracking-wide text-ink uppercase outline-none placeholder:font-normal placeholder:tracking-normal placeholder:normal-case"
+            />
+            <button type="submit" className="h-9 rounded-lg bg-teal px-6 text-sm font-bold text-cream transition-colors hover:bg-teal/90">
+              Check
             </button>
           </div>
-        ) : (
-          <form onSubmit={check} noValidate className="flex flex-col gap-1.5">
-            <label htmlFor="pdp-zip" className="text-[0.8125rem] text-slate">
-              Enter your ZIP code to see the delivery date
-            </label>
-            <div
-              className={cn(
-                "flex h-12 items-center rounded-xl border-[1.5px] bg-white pr-[5px] pl-3.5 focus-within:ring-3 focus-within:ring-ring/40",
-                error ? "border-[#a33a1f]" : "border-line-strong focus-within:border-teal"
-              )}
-            >
-              <MapPinIcon aria-hidden="true" className="size-[18px] text-slate" />
-              <input
-                id="pdp-zip"
-                inputMode="numeric"
-                maxLength={5}
-                autoComplete="postal-code"
-                placeholder="e.g. 10001"
-                value={zip}
-                aria-invalid={error || undefined}
-                aria-describedby={error ? "pdp-zip-error" : undefined}
-                onChange={(e) => {
-                  setZip(e.target.value.replace(/\D/g, ""))
-                  setError(false)
-                }}
-                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-[0.9375rem] text-ink outline-none"
-              />
-              <button type="submit" className="h-[2.375rem] rounded-[9px] bg-teal px-[18px] text-sm font-semibold text-cream hover:bg-teal/90">
-                Check
-              </button>
-            </div>
-            {error && (
-              <span id="pdp-zip-error" role="alert" className="text-[0.8125rem] text-terra-text">
-                Enter a 5-digit US ZIP code.
-              </span>
-            )}
-          </form>
-        )}
+          {formError && (
+            <span id="pdp-postal-error" role="alert" className="text-xs text-terra-text">
+              {formError}
+            </span>
+          )}
+        </form>
+      )}
 
-        <ol className="relative flex pt-1">
-          <span aria-hidden="true" className="absolute top-6 right-[16.6%] left-[16.6%] h-0.5 bg-[repeating-linear-gradient(90deg,#c9bba6_0_6px,transparent_6px_12px)]" />
-          {steps.map(({ icon: Icon, label, value, strong }) => (
-            <li key={label} className="relative flex flex-1 flex-col items-center gap-1.5 text-center">
-              <span
-                aria-hidden="true"
-                className={cn("relative z-10 grid size-10 place-items-center rounded-full", strong ? "bg-teal text-cream" : "bg-teal-soft text-teal")}
-              >
-                <Icon className="size-[18px]" />
-              </span>
-              <span className="text-xs leading-tight text-slate">{label}</span>
-              <span className="min-h-[1.25em] text-sm leading-tight font-bold">{value ?? "Today"}</span>
-            </li>
-          ))}
-        </ol>
-
-        <ul className="flex flex-wrap gap-2 border-t border-line-soft pt-3.5">
-          {["Free shipping over $50", "US warehouse", "Tracked delivery"].map((chip) => (
-            <li key={chip} className="inline-flex items-center gap-1.5 rounded-full bg-sand px-2.5 py-[5px] text-xs font-semibold">
-              <CheckIcon aria-hidden="true" className="size-3.5 text-success" strokeWidth={2.5} />
-              {chip}
+      {result?.status === "ok" && result.options.length > 1 && (
+        <ul className="flex flex-col gap-1 rounded-lg border border-teal-line/60 bg-white px-3 py-2 text-xs">
+          {result.options.map((o) => (
+            <li key={o.title} className="flex justify-between gap-3">
+              <span>{o.title}</span>
+              <span className="font-semibold tabular-nums">{o.cost.amount === 0 ? "Free" : formatMoney(o.cost)}</span>
             </li>
           ))}
         </ul>
-        <p className="-mt-1 text-xs text-slate">Estimated dates. Exact shipping options and costs are shown at checkout.</p>
-      </div>
+      )}
+
+      <ul className="grid grid-cols-2 gap-3 border-t border-dashed border-teal-line pt-3">
+        {perks.map(({ icon: Icon, title, sub }) => (
+          <li key={title} className="flex items-center gap-2.5">
+            <Icon aria-hidden="true" className="size-6 flex-none text-teal" strokeWidth={1.6} />
+            <span className="flex min-w-0 flex-col leading-tight">
+              <span className="text-[0.8125rem] font-bold">{title}</span>
+              <span className="truncate text-xs text-slate">{sub}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

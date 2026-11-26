@@ -14,7 +14,15 @@ import { FormField, Honeypot, inputClass } from "./form-field"
 const FOLD = 4
 
 /** "Questions, answered" (design): contact side panel + numbered accordion of questions. */
-export function ProductFaq({ productId, items }: { productId: string; items: { q: string; a: string }[] }) {
+export function ProductFaq({
+  productId,
+  productHandle,
+  items,
+}: {
+  productId: string
+  productHandle: string
+  items: { q: string; a: string }[]
+}) {
   const [open, setOpen] = useState<Set<number>>(new Set([0]))
   const [showAll, setShowAll] = useState(false)
   const [asking, setAsking] = useState(false)
@@ -56,6 +64,7 @@ export function ProductFaq({ productId, items }: { productId: string; items: { q
           {asking && !sent && (
             <form action={action} className="flex flex-col gap-2.5 rounded-[14px] border-[1.5px] border-teal bg-white p-4">
               <input type="hidden" name="productId" value={productId} />
+              <input type="hidden" name="productHandle" value={productHandle} />
               <Honeypot />
               <FormField label="Your question" error={errors.question}>
                 {(p) => <textarea {...p} name="question" rows={3} placeholder="e.g. What are the dimensions?" className={cn(inputClass, "resize-y")} />}
@@ -63,6 +72,11 @@ export function ProductFaq({ productId, items }: { productId: string; items: { q
               <FormField label="Email for the answer" error={errors.email}>
                 {(p) => <input {...p} name="email" type="email" autoComplete="email" placeholder="you@example.com" className={inputClass} />}
               </FormField>
+              {state.status === "error" && !state.fields && (
+                <p role="alert" className="rounded-lg bg-terra-soft px-3 py-2 text-[0.8125rem] font-semibold text-terra-text">
+                  {state.message}
+                </p>
+              )}
               <Button type="submit" disabled={pending} className="h-[2.625rem] font-bold">
                 {pending ? "Sending…" : "Send question"}
               </Button>

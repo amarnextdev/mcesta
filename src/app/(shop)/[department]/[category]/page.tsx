@@ -5,26 +5,19 @@ import { Suspense } from "react"
 import { CollectionScreen } from "@/features/collection/components/collection-screen"
 import { CollectionSkeleton } from "@/features/collection/components/collection-skeleton"
 import { collectionMetadata } from "@/features/collection/metadata"
-import {
-  allCategories,
-  categoryHref,
-  collectionHandle,
-  departmentAllHref,
-  departments,
-  getCategory,
-  getDepartment,
-} from "@/lib/config/navigation"
+import { categoryHref, departmentAllHref, getCategory, getDepartment } from "@/lib/navigation"
+import { getDepartments } from "@/lib/navigation/navigation.server"
 
 type Props = PageProps<"/[department]/[category]">
 
 /** Prerender every category in the menu. Unknown ones are a 404. */
-export function generateStaticParams() {
-  return departments.flatMap((d) => allCategories(d).map((c) => ({ department: d.slug, category: c.slug })))
+export async function generateStaticParams() {
+  return (await getDepartments()).flatMap((d) => d.categories.map((c) => ({ department: d.slug, category: c.slug })))
 }
 
 async function resolve(params: Props["params"]) {
   const { department: deptSlug, category: catSlug } = await params
-  const department = getDepartment(deptSlug)
+  const department = getDepartment(await getDepartments(), deptSlug)
   const category = department ? getCategory(department, catSlug) : null
   return department && category ? { department, category } : null
 }
@@ -33,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const found = await resolve(params)
   if (!found) return { title: "Page not found", robots: { index: false } }
   const { department, category } = found
-  return collectionMetadata(collectionHandle(category), {
+  return collectionMetadata(category.slug, {
     canonical: categoryHref(department, category),
     fallbackTitle: `${category.label} · ${department.label}`,
   })
@@ -46,7 +39,7 @@ async function CategoryContent({ params, searchParams }: Props) {
 
   return (
     <CollectionScreen
-      handle={collectionHandle(category)}
+      handle={category.slug}
       searchParams={await searchParams}
       parents={[
         { label: "Home", href: "/" },

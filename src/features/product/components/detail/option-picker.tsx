@@ -21,12 +21,16 @@ type OptionPickerProps = {
 export function OptionPicker({ product, option, selection, onSelect }: OptionPickerProps) {
   const current = selection[option.name]
   const visual = isVisualOption(option.name)
+  const label = option.name.charAt(0).toUpperCase() + option.name.slice(1)
+  // Show a price under each swatch only when the choice changes the price.
+  const showPrices =
+    new Set(option.values.map((v) => optionState(product, selection, option.name, v).variant?.price.amount)).size > 1
 
   return (
     <fieldset className="flex flex-col gap-3">
       <legend className="mb-3 flex w-full items-baseline justify-between gap-3 text-[0.9375rem]">
         <span>
-          <span className="font-bold">{option.name}:</span> <span className="text-slate">{current}</span>
+          <span className="font-bold">{label}:</span> <span className="font-medium text-ink/80">{current}</span>
         </span>
         <span className="text-[0.8125rem] text-slate">
           {option.values.length} {visual ? "options" : "choices"}
@@ -35,8 +39,8 @@ export function OptionPicker({ product, option, selection, onSelect }: OptionPic
 
       <div
         role="radiogroup"
-        aria-label={option.name}
-        className={cn(visual ? "flex flex-wrap gap-3" : "grid grid-cols-2 gap-2.5 sm:grid-cols-3")}
+        aria-label={label}
+        className={cn(visual ? "flex flex-wrap gap-x-2.5 gap-y-3.5" : "grid grid-cols-2 gap-2.5 sm:grid-cols-3")}
       >
         {option.values.map((value) => {
           const state = optionState(product, selection, option.name, value)
@@ -45,6 +49,7 @@ export function OptionPicker({ product, option, selection, onSelect }: OptionPic
 
           if (visual) {
             const image = state.variant?.image
+            const price = state.variant?.price
             return (
               <button
                 key={value}
@@ -52,31 +57,49 @@ export function OptionPicker({ product, option, selection, onSelect }: OptionPic
                 role="radio"
                 aria-checked={on}
                 aria-label={`${value}${soldOut ? " (sold out)" : ""}`}
+                title={value}
                 onClick={() => onSelect(state.selection)}
-                className="group/sw relative flex w-[84px] flex-col items-center gap-2 focus-visible:outline-none"
+                className="group/sw relative flex w-[76px] flex-col items-center gap-1.5 focus-visible:outline-none"
               >
                 <span
                   className={cn(
-                    "block rounded-[14px] border-2 bg-white p-[3px] transition-colors group-focus-visible/sw:ring-3 group-focus-visible/sw:ring-ring/50",
-                    on ? "border-teal" : "border-line hover:border-line-strong"
+                    "relative block rounded-xl border-[1.5px] bg-white p-[3px] transition-all duration-150 group-focus-visible/sw:ring-3 group-focus-visible/sw:ring-ring/50",
+                    on
+                      ? "border-teal shadow-[0_0_0_3px_var(--color-teal-soft)]"
+                      : "border-line group-hover/sw:-translate-y-0.5 group-hover/sw:border-line-strong group-hover/sw:shadow-[0_6px_14px_-8px_rgba(31,42,46,0.3)]"
                   )}
                 >
-                  <span className="relative block size-[72px] overflow-hidden rounded-[10px] bg-sand">
+                  <span className="relative block size-16 overflow-hidden rounded-[9px] bg-sand">
                     {image ? (
-                      <Image src={image.url} alt="" fill sizes="72px" className={cn("object-cover", soldOut && "opacity-40")} />
+                      <Image src={image.url} alt="" fill sizes="64px" className={cn("object-cover", soldOut && "opacity-40 grayscale")} />
                     ) : (
                       <span className="grid size-full place-items-center font-heading text-xl text-ink/40">{value[0]}</span>
                     )}
+                    {soldOut && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-[linear-gradient(to_top_right,transparent_calc(50%-1px),var(--color-slate)_50%,transparent_calc(50%+1px))]"
+                      />
+                    )}
                   </span>
+                  {on && (
+                    <span aria-hidden="true" className="absolute -top-2 -right-2 grid size-5 place-items-center rounded-full border-2 border-white bg-teal text-cream shadow-sm">
+                      <CheckIcon className="size-2.5" strokeWidth={3.5} />
+                    </span>
+                  )}
                 </span>
-                {on && (
-                  <span aria-hidden="true" className="absolute -top-1.5 right-0.5 grid size-[22px] place-items-center rounded-full border-2 border-cream bg-teal text-cream">
-                    <CheckIcon className="size-3" strokeWidth={3} />
-                  </span>
-                )}
-                <span className={cn("text-center text-[0.8125rem] leading-tight", on ? "font-bold text-ink" : "text-slate", soldOut && "line-through")}>
+                <span
+                  className={cn(
+                    "line-clamp-2 text-center text-xs leading-tight",
+                    on ? "font-bold text-ink" : "text-slate group-hover/sw:text-ink",
+                    soldOut && "line-through"
+                  )}
+                >
                   {value}
                 </span>
+                {showPrices && price && (
+                  <span className={cn("text-[0.6875rem] tabular-nums", on ? "font-semibold text-teal" : "text-slate")}>{formatMoney(price)}</span>
+                )}
               </button>
             )
           }

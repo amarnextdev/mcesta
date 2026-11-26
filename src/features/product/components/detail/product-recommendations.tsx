@@ -12,12 +12,17 @@ import { BoughtTogether } from "./bought-together"
  */
 export async function ProductRecommendations({
   product,
+  country,
   seeAll,
 }: {
   product: ProductDetail
+  country: string
   seeAll?: { label: string; href: string }
 }) {
-  const [together, related] = await Promise.all([getBoughtTogether(product.id), getRecommendations(product.id)])
+  const [together, related] = await Promise.all([
+    getBoughtTogether(product.id, country),
+    getRecommendations(product.id, country),
+  ])
   const self = productToCard(product)
   const togetherIds = new Set(together.map((p) => p.id))
   const similar = related.filter((p) => !togetherIds.has(p.id)).slice(0, 5)

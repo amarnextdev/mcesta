@@ -2,26 +2,23 @@
 
 import { usePathname } from "next/navigation"
 
-import { getDepartment, menuHrefForCollection } from "@/lib/config/navigation"
-
 import { TabLinks, type CategoryTabProps } from "./tab-link"
 
 /**
- * Which bar item a URL belongs to: "/" → For You, /{department}/… → that department,
- * /collections/{handle} → its department if the collection is in the menu, else the page itself.
+ * Whether a bar item matches the URL: "/" → For You; /{department}/… or /collections/{handle}
+ * of one of its collections → that department; other items → their own page.
  */
-function activeHrefFor(pathname: string) {
-  if (pathname === "/") return "/"
+function isActive(pathname: string, { href, handles }: CategoryTabProps) {
+  if (href === "/") return pathname === "/"
   const [first, second] = pathname.split("/").filter(Boolean)
-  if (first && getDepartment(first)) return `/${first}`
-  if (first === "collections" && second) {
-    const href = menuHrefForCollection(decodeURIComponent(second))
-    if (href) return `/${href.split("/")[1]}`
+  if (handles) {
+    if (`/${first}` === href) return true
+    return first === "collections" && !!second && handles.includes(decodeURIComponent(second))
   }
-  return pathname
+  return pathname === href || pathname.startsWith(`${href}/`)
 }
 
 /** Category bar item with its active state (reads the URL). */
 export function ActiveTabs(props: CategoryTabProps) {
-  return <TabLinks {...props} active={activeHrefFor(usePathname()) === props.href} />
+  return <TabLinks {...props} active={isActive(usePathname(), props)} />
 }

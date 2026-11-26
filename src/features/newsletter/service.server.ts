@@ -2,7 +2,7 @@ import "server-only"
 
 /**
  * Where sign-ups go.
- * Now (mock.shop): nothing is saved, the call just succeeds.
+ * Now: nothing is saved yet, the call just succeeds (wired up with the Admin API later).
  * Real store: create/update the Shopify customer with email marketing consent
  * (Admin API `customerCreate` / `customerEmailMarketingConsentUpdate`), so Shopify Email
  * or Klaviyo sends the WELCOME10 code. Keep Admin credentials server-side only.

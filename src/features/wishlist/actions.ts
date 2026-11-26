@@ -1,39 +1,33 @@
 "use server"
 
-import { cacheLife, cacheTag } from "next/cache"
 import { z } from "zod"
 
-import { storefrontServerFetch } from "@/lib/shopify/client.server"
-import { toProductCard } from "@/lib/shopify/mappers"
-import { PRODUCTS_BY_ID_QUERY } from "@/lib/shopify/queries"
-import type { ProductCard, ShopifyProductCard } from "@/lib/shopify/types"
+import type { WishItem } from "./types"
+import { addToWishlist, listWishlist, removeFromWishlist } from "./wishlist.server"
 
-async function getProductsById(ids: string[]): Promise<(ProductCard | null)[]> {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("products")
+const productId = z.string().regex(/^gid:\/\/shopify\/Product\/\d+$/)
 
-  const data = await storefrontServerFetch<{ nodes: (ShopifyProductCard | null)[] }>({
-    query: PRODUCTS_BY_ID_QUERY,
-    variables: { ids },
-  })
-  // nodes() returns {} for ids that aren't products, null for deleted ones.
-  return data.nodes.map((n) => (n && "handle" in n ? toProductCard(n) : null))
+const addInput = z.object({
+  productId,
+  handle: z.string().regex(/^[a-z0-9-]{1,255}$/),
+  price: z.object({ amount: z.number().nonnegative().max(1_000_000), currencyCode: z.string().length(3) }),
+})
+
+export async function getWishlistAction(): Promise<WishItem[]> {
+  try {
+    return await listWishlist()
+  } catch (error) {
+    console.error("[wishlist] list", error)
+    return []
+  }
 }
 
-/**
- * Current price and stock for wishlist items, so the page can show price drops and sold-out
- * items. Returns a map of product id → card (missing = product no longer exists).
- */
-export async function refreshWishlistAction(ids: string[]): Promise<Record<string, ProductCard>> {
-  const parsed = z.array(z.string().startsWith("gid://shopify/Product/")).max(100).safeParse(ids)
-  if (!parsed.success || parsed.data.length === 0) return {}
-  try {
-    const sorted = [...new Set(parsed.data)].sort()
-    const cards = await getProductsById(sorted)
-    return Object.fromEntries(cards.flatMap((c) => (c ? [[c.id, c] as const] : [])))
-  } catch (error) {
-    console.error("[wishlist] refresh failed", error)
-    return {}
-  }
+/** Throws on failure so the client can roll back its optimistic update. */
+export async function addWishlistAction(input: z.input<typeof addInput>): Promise<void> {
+  const parsed = addInput.parse(input)
+  await addToWishlist(parsed)
+}
+
+export async function removeWishlistAction(id: string): Promise<void> {
+  await removeFromWishlist(productId.parse(id))
 }

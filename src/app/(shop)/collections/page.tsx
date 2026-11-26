@@ -7,7 +7,8 @@ import { Breadcrumb } from "@/components/shared/breadcrumb"
 import { EmptyState } from "@/components/shared/empty-state"
 import { getCollections } from "@/features/collection/api.server"
 import { ALL_PRODUCTS_HANDLE } from "@/features/collection/config"
-import { collectionHref, menuHrefForCollection } from "@/lib/config/navigation"
+import { collectionHref, menuHrefForCollection } from "@/lib/navigation"
+import { getDepartments } from "@/lib/navigation/navigation.server"
 
 export const metadata: Metadata = {
   title: "All collections",
@@ -19,7 +20,7 @@ const tileColors = ["#E3EFEC", "#EFE6D8", "#F7E3D8", "#E4E9EC"]
 
 /** /collections: every collection as a tile. Data is cached, so this page is prerendered. */
 export default async function CollectionsIndexPage() {
-  const collections = await getCollections()
+  const [collections, departments] = await Promise.all([getCollections(), getDepartments()])
   const tiles = [
     { handle: ALL_PRODUCTS_HANDLE, title: "All products", image: null },
     ...collections.filter((c) => c.handle !== ALL_PRODUCTS_HANDLE && c.handle !== "frontpage"),
@@ -39,7 +40,7 @@ export default async function CollectionsIndexPage() {
           {tiles.map((c, i) => (
             <li key={c.handle}>
               <Link
-                href={menuHrefForCollection(c.handle) ?? collectionHref(c.handle)}
+                href={menuHrefForCollection(departments, c.handle) ?? collectionHref(c.handle)}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line-soft bg-white transition-shadow hover:shadow-[0_8px_24px_rgba(31,42,46,0.08)]"
               >
                 <span

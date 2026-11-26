@@ -4,7 +4,7 @@ import { formatMoney } from "@/lib/format"
 import type { Money } from "@/lib/shopify/types"
 import { cn } from "@/lib/utils"
 
-import { FREE_SHIPPING_THRESHOLD } from "../config"
+import { freeShippingThreshold } from "../config"
 
 /**
  * Free-shipping progress (cart page and drawer).
@@ -21,8 +21,11 @@ export function FreeShippingBar({
   compact?: boolean
   className?: string
 }) {
-  const left = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal.amount)
-  const pct = Math.min(100, (subtotal.amount / FREE_SHIPPING_THRESHOLD) * 100)
+  const threshold = freeShippingThreshold(subtotal.currencyCode)
+  // This market has no free-shipping offer: show nothing rather than a wrong promise.
+  if (threshold === null) return null
+  const left = Math.max(0, threshold - subtotal.amount)
+  const pct = Math.min(100, (subtotal.amount / threshold) * 100)
   const money = (amount: number) => formatMoney({ amount, currencyCode: subtotal.currencyCode })
 
   if (left === 0) {
@@ -32,7 +35,7 @@ export function FreeShippingBar({
           <PartyPopperIcon className={compact ? "size-4" : "size-5"} />
         </span>
         <span className="flex min-w-0 flex-1 flex-col leading-snug">
-          <span className={cn("font-bold text-success", compact ? "text-sm" : "text-[0.9375rem]")}>You&apos;ve unlocked free US shipping</span>
+          <span className={cn("font-bold text-success", compact ? "text-sm" : "text-[0.9375rem]")}>You&apos;ve unlocked free shipping</span>
           {!compact && <span className="text-[0.8125rem] text-slate">Tracked delivery in 3–7 business days, on us.</span>}
         </span>
         <span className="hidden items-center gap-1 rounded-full bg-success px-2.5 py-1 text-xs font-bold text-white sm:inline-flex">
@@ -52,9 +55,9 @@ export function FreeShippingBar({
         <span className="flex min-w-0 flex-1 flex-col leading-snug">
           <span className={compact ? "text-sm" : "text-[0.9375rem]"}>
             You&apos;re <span className="font-bold text-teal">{money(left)}</span> away from{" "}
-            <span className="font-bold">free US shipping</span>
+            <span className="font-bold">free shipping</span>
           </span>
-          {!compact && <span className="text-[0.8125rem] text-slate">Free on US orders over {money(FREE_SHIPPING_THRESHOLD)}</span>}
+          {!compact && <span className="text-[0.8125rem] text-slate">Free on orders over {money(threshold)}</span>}
         </span>
       </div>
 
@@ -63,10 +66,10 @@ export function FreeShippingBar({
           role="progressbar"
           aria-label="Progress to free shipping"
           aria-valuemin={0}
-          aria-valuemax={FREE_SHIPPING_THRESHOLD}
+          aria-valuemax={threshold}
           aria-valuenow={Math.round(subtotal.amount)}
-          aria-valuetext={`${money(subtotal.amount)} of ${money(FREE_SHIPPING_THRESHOLD)}`}
-          className="relative h-2 flex-1 overflow-hidden rounded-full bg-line-soft"
+          aria-valuetext={`${money(subtotal.amount)} of ${money(threshold)}`}
+          className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-line-soft"
         >
           <span
             className="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-teal-line to-teal transition-[width] duration-500 ease-out"
@@ -74,7 +77,7 @@ export function FreeShippingBar({
           />
         </span>
         <span className="text-xs font-semibold text-slate tabular-nums">
-          {money(subtotal.amount)} / {money(FREE_SHIPPING_THRESHOLD)}
+          {money(subtotal.amount)} / {money(threshold)}
         </span>
       </div>
     </div>

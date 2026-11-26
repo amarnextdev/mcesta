@@ -3,7 +3,7 @@ import { ArrowUpIcon, GlobeIcon, MailIcon } from "lucide-react"
 import type { ReactNode } from "react"
 
 import { Logo } from "@/components/brand/logo"
-import { footerNav } from "@/lib/config/navigation"
+import { getNavigation } from "@/lib/navigation/navigation.server"
 import { siteConfig } from "@/lib/config/site"
 
 const socials: { label: string; href: string; icon: ReactNode }[] = [
@@ -44,8 +44,10 @@ const socials: { label: string; href: string; icon: ReactNode }[] = [
  * Dark footer. Brand, contact and socials on the left, three link columns, then a bottom bar
  * with copyright, where we ship, accepted payments and a back-to-top link.
  */
-export function SiteFooter() {
+export async function SiteFooter() {
   const year = 2026
+  // Footer links come from the Shopify menu "storefront-footer".
+  const { footer: footerNav } = await getNavigation()
 
   return (
     <footer className="relative isolate overflow-hidden bg-ink text-sand">

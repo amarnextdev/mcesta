@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useMemo, useState } from "react"
-import { LockIcon, Share2Icon, ShieldCheckIcon, ShoppingBagIcon, TruckIcon } from "lucide-react"
+import { LockIcon, PackageXIcon, Share2Icon, ShieldCheckIcon, ShoppingBagIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { Rating } from "@/components/shared/rating"
@@ -21,10 +21,15 @@ import { ProductDetails } from "./product-details"
 import { ProductGallery } from "./product-gallery"
 import { QuantityStepper } from "./quantity-stepper"
 
+/**
+ * Backed by CJ's refund/resend policy (damaged, wrong or missing items, parcels lost in transit)
+ * and Shopify's checkout. Delivery promises (shipping, tracking) live in the delivery box only.
+ * Keep in line with the Refund policy page.
+ */
 const promises = [
-  { icon: ShieldCheckIcon, text: "Damage covered", sub: "48-hour reporting" },
-  { icon: LockIcon, text: "Secure", sub: "checkout" },
-  { icon: TruckIcon, text: "Ships from", sub: "the USA" },
+  { icon: ShieldCheckIcon, text: "Damaged or wrong item?", sub: "Replacement or refund" },
+  { icon: PackageXIcon, text: "Lost in transit?", sub: "We resend or refund" },
+  { icon: LockIcon, text: "Secure checkout", sub: "Encrypted by Shopify" },
 ]
 
 /**
@@ -32,7 +37,16 @@ const promises = [
  * The chosen options live in the URL (?Color=Oak) via history.replaceState, so links share
  * the exact variant without a server round trip.
  */
-export function ProductView({ product, category }: { product: ProductDetail; category: { label: string; href: string } | null }) {
+export function ProductView({
+  product,
+  category,
+  country,
+}: {
+  product: ProductDetail
+  category: { label: string; href: string } | null
+  /** Shopper's market (ISO code), for the delivery check. */
+  country: string
+}) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const selection = useMemo(() => selectionFromSearch(product, searchParams), [product, searchParams])
@@ -165,20 +179,24 @@ export function ProductView({ product, category }: { product: ProductDetail; cat
           )}
         </div>
 
-        <DeliveryEstimate />
+        <DeliveryEstimate
+          variantId={variant?.id}
+          country={country}
+          currencyCode={variant?.price.currencyCode ?? product.variants[0]?.price.currencyCode}
+        />
 
         <div className="flex flex-col gap-3.5">
           <h2 className="font-sans text-lg font-bold">Shop with peace of mind</h2>
+          <p className="-mt-2 text-[0.8125rem] text-slate">Report a damaged, wrong or missing item within 48 hours of delivery, with a photo or video.</p>
           <ul className="grid grid-cols-3 gap-2.5">
             {promises.map(({ icon: Icon, text, sub }) => (
               <li key={text} className="flex flex-col items-center gap-2 rounded-xl bg-sand px-2 py-3.5 text-center">
                 <span aria-hidden="true" className="grid size-11 place-items-center rounded-full bg-white text-teal">
                   <Icon className="size-5" />
                 </span>
-                <span className="text-[0.8125rem] leading-snug font-semibold">
-                  {text}
-                  <br />
-                  {sub}
+                <span className="flex flex-col text-[0.8125rem] leading-snug">
+                  <span className="font-semibold">{text}</span>
+                  <span className="text-xs text-slate">{sub}</span>
                 </span>
               </li>
             ))}

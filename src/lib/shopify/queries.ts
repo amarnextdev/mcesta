@@ -1,7 +1,8 @@
 import { COLLECTION_FRAGMENT, PRODUCT_CARD_FRAGMENT } from "./fragments"
 
 export const PRODUCTS_QUERY = /* GraphQL */ `
-  query Products($first: Int!, $sortKey: ProductSortKeys, $reverse: Boolean, $query: String) {
+  query Products($first: Int!, $sortKey: ProductSortKeys, $reverse: Boolean, $query: String, $country: CountryCode)
+  @inContext(country: $country) {
     products(first: $first, sortKey: $sortKey, reverse: $reverse, query: $query) {
       nodes {
         ...ProductCard
@@ -22,7 +23,8 @@ export const COLLECTION_PRODUCTS_QUERY = /* GraphQL */ `
     $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
     $filters: [ProductFilter!]
-  ) {
+    $country: CountryCode
+  ) @inContext(country: $country) {
     collection(handle: $handle) {
       ...CollectionInfo
       products(
@@ -71,7 +73,8 @@ export const ALL_PRODUCTS_PAGE_QUERY = /* GraphQL */ `
     $sortKey: ProductSortKeys
     $reverse: Boolean
     $query: String
-  ) {
+    $country: CountryCode
+  ) @inContext(country: $country) {
     products(
       first: $first
       after: $after
@@ -120,7 +123,8 @@ export const COLLECTION_CURSORS_QUERY = /* GraphQL */ `
     $sortKey: ProductCollectionSortKeys
     $reverse: Boolean
     $filters: [ProductFilter!]
-  ) {
+    $country: CountryCode
+  ) @inContext(country: $country) {
     collection(handle: $handle) {
       products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, filters: $filters) {
         pageInfo {
@@ -136,7 +140,14 @@ export const COLLECTION_CURSORS_QUERY = /* GraphQL */ `
 `
 
 export const ALL_PRODUCT_CURSORS_QUERY = /* GraphQL */ `
-  query AllProductCursors($first: Int!, $after: String, $sortKey: ProductSortKeys, $reverse: Boolean, $query: String) {
+  query AllProductCursors(
+    $first: Int!
+    $after: String
+    $sortKey: ProductSortKeys
+    $reverse: Boolean
+    $query: String
+    $country: CountryCode
+  ) @inContext(country: $country) {
     products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, query: $query) {
       pageInfo {
         hasNextPage
@@ -151,7 +162,7 @@ export const ALL_PRODUCT_CURSORS_QUERY = /* GraphQL */ `
 
 /** Product page. Up to 20 photos and 100 variants (Shopify's default variant limit). */
 export const PRODUCT_QUERY = /* GraphQL */ `
-  query Product($handle: String!) {
+  query Product($handle: String!, $country: CountryCode) @inContext(country: $country) {
     product(handle: $handle) {
       id
       handle
@@ -203,11 +214,79 @@ export const PRODUCT_QUERY = /* GraphQL */ `
           }
         }
       }
-      collections(first: 3) {
+      collections(first: 20) {
         nodes {
           handle
           title
         }
+      }
+      # Shopify Standard Product Taxonomy category ("Automatic Feeders").
+      category {
+        name
+      }
+      # Category metafields (Shopify admin → product → Category metafields). Values are taxonomy
+      # metaobjects with a label (and a colour for colours). Keys that a category doesn't use come back null.
+      attributes: metafields(
+        identifiers: [
+          { namespace: "shopify", key: "color-pattern" },
+          { namespace: "shopify", key: "material" },
+          { namespace: "shopify", key: "animal-type" },
+          { namespace: "shopify", key: "age-group" },
+          { namespace: "shopify", key: "target-gender" },
+          { namespace: "shopify", key: "size" },
+          { namespace: "shopify", key: "capacity" },
+          { namespace: "shopify", key: "power-source" },
+          { namespace: "shopify", key: "battery-type" },
+          { namespace: "shopify", key: "battery-size" },
+          { namespace: "shopify", key: "connectivity-technology" },
+          { namespace: "shopify", key: "compatible-devices" },
+          { namespace: "shopify", key: "fabric" },
+          { namespace: "shopify", key: "pattern" },
+          { namespace: "shopify", key: "style" },
+          { namespace: "shopify", key: "theme" },
+          { namespace: "shopify", key: "shape" },
+          { namespace: "shopify", key: "finish" },
+          { namespace: "shopify", key: "closure-type" },
+          { namespace: "shopify", key: "mounting-type" },
+          { namespace: "shopify", key: "occasion-style" },
+          { namespace: "shopify", key: "features" },
+          { namespace: "shopify", key: "waterproof" },
+          { namespace: "shopify", key: "care-instructions" }
+        ]
+      ) {
+        key
+        value
+        type
+        references(first: 12) {
+          nodes {
+            ... on Metaobject {
+              label: field(key: "label") {
+                value
+              }
+              color: field(key: "color") {
+                value
+              }
+            }
+          }
+        }
+      }
+      # Your own spec rows ("Capacity: 4 L"), what's in the box, warranty (Product metafields).
+      customSpecs: metafield(namespace: "custom", key: "specs") {
+        value
+      }
+      inTheBox: metafield(namespace: "custom", key: "in_the_box") {
+        value
+      }
+      warranty: metafield(namespace: "custom", key: "warranty") {
+        value
+      }
+      # Care instructions (multi-line text) in a "custom.care_instructions" metafield.
+      care: metafield(namespace: "custom", key: "care_instructions") {
+        value
+      }
+      # Product highlights: short lines ("Up to 30 hr battery life") in a "custom.highlights" metafield.
+      highlights: metafield(namespace: "custom", key: "highlights") {
+        value
       }
       # Product FAQ: JSON list [{"q": "...", "a": "..."}] in a "custom.faq" metafield.
       faq: metafield(namespace: "custom", key: "faq") {
@@ -226,7 +305,7 @@ export const PRODUCT_QUERY = /* GraphQL */ `
 
 /** "Similar products" (Shopify's built-in recommendations). */
 export const PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
-  query ProductRecommendations($productId: ID!) {
+  query ProductRecommendations($productId: ID!, $country: CountryCode) @inContext(country: $country) {
     productRecommendations(productId: $productId) {
       ...ProductCard
     }
@@ -236,7 +315,7 @@ export const PRODUCT_RECOMMENDATIONS_QUERY = /* GraphQL */ `
 
 /** "Frequently bought together": complementary products set in the Search & Discovery app. */
 export const COMPLEMENTARY_PRODUCTS_QUERY = /* GraphQL */ `
-  query ComplementaryProducts($productId: ID!) {
+  query ComplementaryProducts($productId: ID!, $country: CountryCode) @inContext(country: $country) {
     productRecommendations(productId: $productId, intent: COMPLEMENTARY) {
       ...ProductCard
     }
@@ -246,7 +325,7 @@ export const COMPLEMENTARY_PRODUCTS_QUERY = /* GraphQL */ `
 
 /** Fresh price and stock for saved products (wishlist). Deleted products come back as null. */
 export const PRODUCTS_BY_ID_QUERY = /* GraphQL */ `
-  query ProductsById($ids: [ID!]!) {
+  query ProductsById($ids: [ID!]!, $country: CountryCode) @inContext(country: $country) {
     nodes(ids: $ids) {
       ... on Product {
         ...ProductCard
@@ -254,4 +333,47 @@ export const PRODUCTS_BY_ID_QUERY = /* GraphQL */ `
     }
   }
   ${PRODUCT_CARD_FRAGMENT}
+`
+
+/** Countries the store sells to (Shopify Markets), with each one's currency. For the country picker. */
+export const LOCALIZATION_QUERY = /* GraphQL */ `
+  query Localization {
+    localization {
+      availableCountries {
+        isoCode
+        name
+        currency {
+          isoCode
+          symbol
+        }
+      }
+    }
+  }
+`
+
+/** Live price and stock of saved variants ("Saved for later"). Deleted variants come back as null. */
+export const VARIANTS_BY_ID_QUERY = /* GraphQL */ `
+  query VariantsById($ids: [ID!]!, $country: CountryCode) @inContext(country: $country) {
+    nodes(ids: $ids) {
+      ... on ProductVariant {
+        id
+        title
+        availableForSale
+        price {
+          amount
+          currencyCode
+        }
+        image {
+          url
+        }
+        product {
+          handle
+          title
+          featuredImage {
+            url
+          }
+        }
+      }
+    }
+  }
 `

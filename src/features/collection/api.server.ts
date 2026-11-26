@@ -5,7 +5,7 @@ import { cacheLife, cacheTag } from "next/cache"
 import { storefrontServerFetch } from "@/lib/shopify/client.server"
 import { toCollectionInfo } from "@/lib/shopify/mappers"
 import { COLLECTIONS_QUERY } from "@/lib/shopify/queries"
-import type { Image, ShopifyCollection } from "@/lib/shopify/types"
+import type { ShopifyCollection } from "@/lib/shopify/types"
 
 import { loadCollectionPage, loadCursorIndex, type ListParams } from "./api"
 import type { CollectionPage, CollectionParams } from "./types"
@@ -39,14 +39,4 @@ export async function getCollections() {
     variables: { first: 50 },
   })
   return data.collections.nodes.map(toCollectionInfo)
-}
-
-/** Collection photos by handle (set the image on each collection in Shopify). Never throws. */
-export async function getCollectionImages(): Promise<Map<string, Image>> {
-  try {
-    const collections = await getCollections()
-    return new Map(collections.flatMap((c) => (c.image ? [[c.handle, c.image] as const] : [])))
-  } catch {
-    return new Map()
-  }
 }

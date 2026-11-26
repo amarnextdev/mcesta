@@ -14,7 +14,11 @@ function toURLSearchParams(raw: RawSearchParams): URLSearchParams {
 }
 
 /** URL → typed params. Unknown values fall back to defaults, so bad links never crash the page. */
-export function parseCollectionParams(handle: string, search: RawSearchParams | URLSearchParams): CollectionParams {
+export function parseCollectionParams(
+  handle: string,
+  search: RawSearchParams | URLSearchParams,
+  country: string
+): CollectionParams {
   const url = search instanceof URLSearchParams ? search : toURLSearchParams(search)
   const get = (key: string) => url.get(key) ?? undefined
   const sort = get("sort")
@@ -27,11 +31,12 @@ export function parseCollectionParams(handle: string, search: RawSearchParams | 
     tab: isCollectionTab(tab) ? tab : DEFAULT_TAB,
     filters: parseFilters(url),
     page,
+    country,
   }
 }
 
 /** Typed params → query string. Defaults are left out so URLs stay short. */
-export function collectionSearch(params: Omit<CollectionParams, "handle">): string {
+export function collectionSearch(params: Omit<CollectionParams, "handle" | "country">): string {
   const search = new URLSearchParams()
   if (params.tab !== DEFAULT_TAB) search.set("tab", params.tab)
   if (params.sort !== DEFAULT_SORT) search.set("sort", params.sort)

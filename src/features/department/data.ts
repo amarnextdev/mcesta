@@ -1,16 +1,10 @@
-import {
-  allCategories,
-  categoryHref,
-  collectionHandle,
-  departmentAllHref,
-  type Category,
-  type Department,
-  type NavLink,
-} from "@/lib/config/navigation"
+import { categoryHref, departmentAllHref, type Department, type NavLink } from "@/lib/navigation"
+import type { Image } from "@/lib/shopify/types"
 
 /**
- * Department landing content (banners + "shop for" tiles).
- * Hardcoded for now; later a Shopify metaobject `department_page` per department.
+ * Department landing content. Category tiles come from the Shopify menu;
+ * banners are generated, with hand-written ones for some departments (later a Shopify
+ * metaobject `department_page` per department).
  */
 
 export type DepartmentBanner = {
@@ -31,39 +25,14 @@ const themes: DepartmentBanner["theme"][] = [
   { bg: "#1F2A2E", fg: "#F3EEE6", accent: "#E79A76" },
 ]
 
-/** Categories shown as large photo tiles (Flipkart-style Men / Women / Kids), by category slug. */
-const shopFor: Record<string, string[]> = {
-  fashion: ["men", "women", "kids"],
-}
+/** Hand-written banners per department slug. Departments without one get sensible defaults. */
+const customBanners: Record<string, Omit<DepartmentBanner, "theme">[]> = {}
 
-/** Hand-written banners per department. Departments without one get sensible defaults. */
-const customBanners: Record<string, Omit<DepartmentBanner, "theme">[]> = {
-  fashion: [
-    { eyebrow: "Autumn Winter '26", title: "Layer up in style", subtitle: "Scarves, hats and cozy accessories", cta: "Shop the edit", href: "/fashion/scarves-and-hats" },
-    { eyebrow: "Don't miss out", title: "Watches and jewelry", subtitle: "Gift-ready pieces under $50", cta: "Shop now", href: "/fashion/watches" },
-    { eyebrow: "Shining deals", title: "Bags and wallets", subtitle: "Everyday carry, made to last", cta: "Explore", href: "/fashion/bags-and-wallets" },
-  ],
-}
+export type DepartmentTile = NavLink & { image: Image | null }
 
-export type DepartmentTile = NavLink & { /** Shopify collection, for its photo. */ collection: string }
-
-function toTile(department: Department, c: Category): DepartmentTile {
-  return { label: c.label, href: categoryHref(department, c), collection: collectionHandle(c) }
-}
-
-/** Sub-categories as small tiles: /{department}/{category}. Large "shop for" ones are left out. */
+/** One tile per category: /{department}/{category}. */
 export function departmentTiles(department: Department): DepartmentTile[] {
-  const big = shopFor[department.slug] ?? []
-  return allCategories(department)
-    .filter((c) => !big.includes(c.slug))
-    .map((c) => toTile(department, c))
-}
-
-export function departmentShopFor(department: Department): DepartmentTile[] {
-  const big = shopFor[department.slug] ?? []
-  return allCategories(department)
-    .filter((c) => big.includes(c.slug))
-    .map((c) => toTile(department, c))
+  return department.categories.map((c) => ({ label: c.label, href: categoryHref(department, c), image: c.image }))
 }
 
 export function departmentBanners(department: Department): DepartmentBanner[] {

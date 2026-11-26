@@ -5,35 +5,31 @@ import { Suspense } from "react"
 import { CollectionScreen } from "@/features/collection/components/collection-screen"
 import { CollectionSkeleton } from "@/features/collection/components/collection-skeleton"
 import { collectionMetadata } from "@/features/collection/metadata"
-import {
-  collectionHandle,
-  departmentAllHref,
-  departments,
-  getDepartment,
-} from "@/lib/config/navigation"
+import { departmentAllHref, getDepartment } from "@/lib/navigation"
+import { getDepartments } from "@/lib/navigation/navigation.server"
 
 type Props = PageProps<"/[department]/all">
 
-export function generateStaticParams() {
-  return departments.map((d) => ({ department: d.slug }))
+export async function generateStaticParams() {
+  return (await getDepartments()).map((d) => ({ department: d.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const department = getDepartment((await params).department)
+  const department = getDepartment(await getDepartments(), (await params).department)
   if (!department) return { title: "Page not found", robots: { index: false } }
-  return collectionMetadata(collectionHandle(department), {
+  return collectionMetadata(department.slug, {
     canonical: departmentAllHref(department),
     fallbackTitle: `All ${department.label}`,
   })
 }
 
 async function DepartmentProducts({ params, searchParams }: Props) {
-  const department = getDepartment((await params).department)
+  const department = getDepartment(await getDepartments(), (await params).department)
   if (!department) notFound()
 
   return (
     <CollectionScreen
-      handle={collectionHandle(department)}
+      handle={department.slug}
       searchParams={await searchParams}
       parents={[{ label: "Home", href: "/" }]}
       title={department.label}

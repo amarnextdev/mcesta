@@ -7,10 +7,10 @@ import { useState } from "react"
 import { Logo } from "@/components/brand/logo"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { categoryHref, departmentAllHref, departments, utilityLinks } from "@/lib/config/navigation"
+import { categoryHref, departmentAllHref, subcategoryHref, utilityLinks, type Department } from "@/lib/navigation"
 
 /** Phone and tablet menu: a left drawer with departments as an accordion. */
-export function MobileNav() {
+export function MobileNav({ departments }: { departments: Department[] }) {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
@@ -33,16 +33,32 @@ export function MobileNav() {
             <AccordionItem key={d.slug} value={d.slug} className="border-line-soft">
               <AccordionTrigger className="py-4 text-base font-semibold">{d.label}</AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4 pb-4">
-                {d.groups.map((group) => (
-                  <div key={group.title}>
-                    <span className="mb-1 block text-xs font-bold tracking-[0.08em] text-slate uppercase">{group.title}</span>
-                    {group.categories.map((c) => (
-                      <Link key={c.slug} href={categoryHref(d, c)} onClick={close} className="block py-1.5 text-[0.9375rem] text-ink">
-                        {c.label}
-                      </Link>
+                {d.categories.length > 0 && (
+                  <ul className="flex flex-col">
+                    {d.categories.map((c) => (
+                      <li key={c.slug}>
+                        <Link href={categoryHref(d, c)} onClick={close} className="block py-1.5 text-[0.9375rem] font-medium text-ink">
+                          {c.label}
+                        </Link>
+                        {c.subcategories.length > 0 && (
+                          <ul className="mb-1 ml-3 border-l border-line-soft pl-3">
+                            {c.subcategories.map((sub) => (
+                              <li key={sub.slug}>
+                                <Link
+                                  href={subcategoryHref(d, c, sub)}
+                                  onClick={close}
+                                  className="block py-1 text-sm text-slate"
+                                >
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
                     ))}
-                  </div>
-                ))}
+                  </ul>
+                )}
                 {d.popular.length > 0 && (
                   <div>
                     <span className="mb-1 block text-xs font-bold tracking-[0.08em] text-slate uppercase">Popular</span>
