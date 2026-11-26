@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
     ],
   },
   partialPrefetching: true,
+  // Browser traffic to Supabase (review photo uploads and images) goes through our own domain:
+  // several Indian ISPs block *.supabase.co, but not this site.
+  async rewrites() {
+    const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "")
+    return supabase ? [{ source: "/supabase/:path*", destination: `${supabase}/:path*` }] : []
+  },
   turbopack: {
     rules: {
       "*.css": {

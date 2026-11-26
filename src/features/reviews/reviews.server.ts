@@ -20,9 +20,18 @@ type ReviewRow = Pick<
 
 export const REVIEW_MEDIA_BUCKET = "review-media"
 
-/** Public URL of a stored review photo (bucket is public-read; files have random names). */
+/**
+ * URL of a stored review photo (bucket is public-read; files have random names). Served through our
+ * own /supabase proxy (next.config.ts rewrites), since some Indian ISPs block *.supabase.co.
+ */
 function mediaUrl(path: string) {
-  return `${serverEnv.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${REVIEW_MEDIA_BUCKET}/${path}`
+  return `/supabase/storage/v1/object/public/${REVIEW_MEDIA_BUCKET}/${path}`
+}
+
+/** Same proxy for upload URLs the browser uses. */
+function viaProxy(url: string) {
+  const base = serverEnv.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "")
+  return base && url.startsWith(base) ? `/supabase${url.slice(base.length)}` : url
 }
 
 const toReview = (r: ReviewRow): Review => ({
@@ -182,7 +191,7 @@ export async function createPhotoUploads(customerId: string, types: string[]) {
       const path = `${photoFolder(customerId)}/${crypto.randomUUID()}.${EXTENSIONS[type]}`
       const { data, error } = await bucket.createSignedUploadUrl(path)
       if (error) throw new Error(error.message)
-      return { path, url: data.signedUrl }
+      return { path, url: viaProxy(data.signedUrl) }
     })
   )
 }
