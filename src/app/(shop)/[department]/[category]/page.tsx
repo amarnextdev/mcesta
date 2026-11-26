@@ -7,12 +7,16 @@ import { CollectionSkeleton } from "@/features/collection/components/collection-
 import { collectionMetadata } from "@/features/collection/metadata"
 import { categoryHref, departmentAllHref, getCategory, getDepartment } from "@/lib/navigation"
 import { getDepartments } from "@/lib/navigation/navigation.server"
+import { atLeastOne, PLACEHOLDER_SLUG } from "@/lib/navigation/static-params"
 
 type Props = PageProps<"/[department]/[category]">
 
 /** Prerender every category in the menu. Unknown ones are a 404. */
 export async function generateStaticParams() {
-  return (await getDepartments()).flatMap((d) => d.categories.map((c) => ({ department: d.slug, category: c.slug })))
+  return atLeastOne(
+    (await getDepartments()).flatMap((d) => d.categories.map((c) => ({ department: d.slug, category: c.slug }))),
+    { department: PLACEHOLDER_SLUG, category: PLACEHOLDER_SLUG }
+  )
 }
 
 async function resolve(params: Props["params"]) {

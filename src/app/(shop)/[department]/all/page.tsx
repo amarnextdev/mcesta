@@ -7,11 +7,15 @@ import { CollectionSkeleton } from "@/features/collection/components/collection-
 import { collectionMetadata } from "@/features/collection/metadata"
 import { departmentAllHref, getDepartment } from "@/lib/navigation"
 import { getDepartments } from "@/lib/navigation/navigation.server"
+import { atLeastOne, PLACEHOLDER_SLUG } from "@/lib/navigation/static-params"
 
 type Props = PageProps<"/[department]/all">
 
 export async function generateStaticParams() {
-  return (await getDepartments()).map((d) => ({ department: d.slug }))
+  return atLeastOne(
+    (await getDepartments()).map((d) => ({ department: d.slug })),
+    { department: PLACEHOLDER_SLUG }
+  )
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

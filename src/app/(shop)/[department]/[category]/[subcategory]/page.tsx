@@ -14,15 +14,19 @@ import {
   subcategoryHref,
 } from "@/lib/navigation"
 import { getDepartments } from "@/lib/navigation/navigation.server"
+import { atLeastOne, PLACEHOLDER_SLUG } from "@/lib/navigation/static-params"
 
 type Props = PageProps<"/[department]/[category]/[subcategory]">
 
 /** Prerender every sub-category in the menu. Unknown ones are a 404. */
 export async function generateStaticParams() {
-  return (await getDepartments()).flatMap((d) =>
-    d.categories.flatMap((c) =>
-      c.subcategories.map((s) => ({ department: d.slug, category: c.slug, subcategory: s.slug }))
-    )
+  return atLeastOne(
+    (await getDepartments()).flatMap((d) =>
+      d.categories.flatMap((c) =>
+        c.subcategories.map((s) => ({ department: d.slug, category: c.slug, subcategory: s.slug }))
+      )
+    ),
+    { department: PLACEHOLDER_SLUG, category: PLACEHOLDER_SLUG, subcategory: PLACEHOLDER_SLUG }
   )
 }
 
